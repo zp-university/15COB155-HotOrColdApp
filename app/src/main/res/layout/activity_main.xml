@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.mad.team1.hotorcold.HomeScreenFragment"
-        android:id="@+id/home_screen_buttons"
+        android:id="@+id/home_screen_fragment"
         />
 
 

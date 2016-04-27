@@ -18,7 +18,8 @@
         android:layout_gravity="center_horizontal|top"
         android:layout_alignBaseline="@+id/instruction_button"
         android:layout_alignBottom="@+id/instruction_button"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="goToStartGame"/>
 
     <Button
         android:layout_width="match_parent"
