@@ -18,12 +18,12 @@ public class SimpleLocationImpl implements SimpleLocation {
         this.latitude = latitude;
     }
 
-    protected static SimpleLocation CreateNewSimpleLocation(double longitude, double latitude) {
+    protected static SimpleLocation createNewSimpleLocation(double longitude, double latitude) {
 
         return new SimpleLocationImpl(longitude, latitude);
     }
 
-    protected static SimpleLocation CreateNewSimpleLocation(Location location){
+    protected static SimpleLocation createNewSimpleLocation(Location location){
 
         return new SimpleLocationImpl(location.getLongitude(), location.getLatitude());
     }
