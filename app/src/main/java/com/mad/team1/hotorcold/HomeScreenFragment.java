@@ -40,10 +40,12 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
         Button start_Button = (Button) myView.findViewById(R.id.start_button);
         Button leaderboard_Button = (Button) myView.findViewById(R.id.leaderboards_button);
         Button instructions_Button = (Button) myView.findViewById(R.id.instruction_button);
+        Button gamecomplete_Button = (Button) myView.findViewById(R.id.gamecomplete_button);
 
         start_Button.setOnClickListener(this);
         leaderboard_Button.setOnClickListener(this);
         instructions_Button.setOnClickListener(this);
+        gamecomplete_Button.setOnClickListener(this);
 
         return myView;
     }
@@ -63,6 +65,9 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.instruction_button:
                 newFragment= new InstructionsFragment();
+                break;
+            case R.id.gamecomplete_button:
+                newFragment= new GameCompleteFragment();
                 break;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

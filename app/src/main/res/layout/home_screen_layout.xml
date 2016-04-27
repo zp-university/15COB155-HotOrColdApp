@@ -10,7 +10,8 @@
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:textAlignment="center" />
 
     <Button
         android:layout_width="match_parent"
@@ -39,6 +40,16 @@
         android:layout_height="wrap_content"
         android:text="@string/leaderboards_text"
         android:id="@+id/leaderboards_button"
+        android:layout_below="@+id/start_button"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/game_complete_title"
+        android:id="@+id/gamecomplete_button"
         android:layout_below="@+id/start_button"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="20dp"
