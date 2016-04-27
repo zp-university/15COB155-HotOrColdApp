@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.mad.team1.hotorcold.GameCompleteFragment">
 
 
@@ -15,5 +17,16 @@
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:padding="20dp" />
+
+    <com.mad.team1.hotorcold.KeyValueView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view"
+        android:layout_gravity="center_horizontal"
+        custom:leftLabel="Hello Mr:"
+        custom:leftLabelStyle="@style/MyTextViewStyle"
+        custom:rightLabel="Whats Up Buddy!"
+        custom:rightLabelStyle="@style/MyTextViewStyle"/>
+
 
 </LinearLayout>

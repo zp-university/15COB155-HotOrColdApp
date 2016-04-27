@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="GameSummaryView">
+    <declare-styleable name="KeyValueView">
         <attr name="leftLabel" format="string" />
         <attr name="rightLabel" format="string" />
         <attr name="leftLabelStyle" format="reference" />
