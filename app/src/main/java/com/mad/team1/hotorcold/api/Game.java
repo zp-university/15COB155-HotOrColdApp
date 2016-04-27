@@ -10,10 +10,11 @@ import java.util.List;
 public interface Game {
 
     SimpleLocation getObjective();
-    Location getStartPoint();
+    SimpleLocation getStartPoint();
+    double getStartDistance();
     long getStartTime();
     List<SimpleLocation> getLocationHistory();
 
-    float calculateDistanceToObjective(Location currentLocation, DistanceUnit unit);
     String calculateDistanceColour(Location currentLocation);
+    int calculateScore(Location currentLocation);
 }

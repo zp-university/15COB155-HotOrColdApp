@@ -8,6 +8,6 @@ import android.location.Location;
 public interface GameManager {
 
     Game getCurrentGame();
-    Game startNewGame(Location currentPosition);
-    float endCurrentGame();
+    Game startNewGame(Location currentPosition, int maxDistance, DistanceUnit unitPreference);
+    Game endCurrentGame();
 }
