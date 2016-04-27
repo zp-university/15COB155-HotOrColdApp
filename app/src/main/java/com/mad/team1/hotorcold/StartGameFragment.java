@@ -45,18 +45,14 @@ public class StartGameFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 showSeekbarDistance(progressValue);
-                Toast.makeText(getActivity().getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getActivity().getApplicationContext(), "Started tracking seekbar", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                showSeekbarDistance(seekBar.getProgress());
-                Toast.makeText(getActivity().getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -72,7 +68,13 @@ public class StartGameFragment extends Fragment {
         }
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String units = pref.getString("pref_units", "NA");
+        String unitType = pref.getString("pref_units", "");
+        String units;
+        switch (unitType){
+            case "Metric": units = "Km"; break;
+            case "Imperial": units = "Miles"; break;
+            default: units = ""; break;
+        }
 
         //SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_units", Context.MODE_PRIVATE);
         textView.setText("Distance: " + distance +" "+ units);
