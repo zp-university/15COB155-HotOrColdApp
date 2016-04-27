@@ -23,7 +23,7 @@ public class SimpleLocationImpl implements SimpleLocation {
         return new SimpleLocationImpl(longitude, latitude);
     }
 
-    protected static SimpleLocation createNewSimpleLocation(Location location){
+    protected static SimpleLocation createNewSimpleLocation(Location location) {
 
         return new SimpleLocationImpl(location.getLongitude(), location.getLatitude());
     }
