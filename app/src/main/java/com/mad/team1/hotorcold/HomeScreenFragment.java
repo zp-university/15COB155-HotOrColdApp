@@ -42,7 +42,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
                 // Replace whatever is in the fragment_container view with this fragment,
                 // and add the transaction to the back stack
-                transaction.replace(R.id.home_screen_fragment, newFragment);
+                transaction.replace(R.id.FragmentContainer, newFragment);
                 transaction.addToBackStack(null);
 
                 // Commit the transaction
