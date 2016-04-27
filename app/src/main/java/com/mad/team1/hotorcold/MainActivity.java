@@ -1,7 +1,6 @@
 package com.mad.team1.hotorcold;
 
 import android.app.FragmentManager;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.FragmentTransaction;

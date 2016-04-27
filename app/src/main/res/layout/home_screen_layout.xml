@@ -8,7 +8,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/welcome_message"
         android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="match_parent"
@@ -18,7 +20,9 @@
         android:layout_gravity="center_horizontal|top"
         android:layout_alignBaseline="@+id/instruction_button"
         android:layout_alignBottom="@+id/instruction_button"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored" />
 
     <Button
         android:layout_width="match_parent"
@@ -27,15 +31,17 @@
         android:id="@+id/instruction_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="151dp" />
+        android:layout_marginBottom="20dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/leaderboards_text"
         android:id="@+id/leaderboards_button"
-        android:layout_gravity="center_horizontal|bottom"
         android:layout_below="@+id/start_button"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored" />
 
 </LinearLayout>
