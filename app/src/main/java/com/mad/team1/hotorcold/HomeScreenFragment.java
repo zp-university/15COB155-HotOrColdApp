@@ -17,7 +17,6 @@ import android.widget.Button;
 public class HomeScreenFragment extends Fragment implements View.OnClickListener{
 
     boolean mDualPane;
-    int mCurCheckPosition = 0;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -53,7 +52,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
 
         Fragment newFragment = null;
-// switch statement send to the correct fragment
+    // switch statement send to the correct fragment
         switch (v.getId()) {
             case R.id.start_button:
                 newFragment = new StartGameFragment();
