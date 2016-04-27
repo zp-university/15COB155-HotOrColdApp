@@ -20,7 +20,15 @@ public class MainActivity extends AppCompatActivity {
         HomeScreenFragment homeFragment = new HomeScreenFragment();
         fragmentTransaction.add(R.id.FragmentContainer, homeFragment);
         fragmentTransaction.commit();
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
 }
