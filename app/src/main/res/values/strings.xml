@@ -8,4 +8,12 @@
     <string name="instructions_text">Instructions</string>
     <string name="title_activity_games_list">Game List</string>
 
+
+    <string-array name="members">
+        <item>Zack</item>
+        <item>Matt</item>
+        <item>Oliver</item>
+        <item>Gurinder</item>
+    </string-array>
+
 </resources>
