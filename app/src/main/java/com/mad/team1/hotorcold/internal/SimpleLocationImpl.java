@@ -7,8 +7,8 @@ import com.mad.team1.hotorcold.api.SimpleLocation;
  */
 public class SimpleLocationImpl implements SimpleLocation {
 
-    private double longitude;
-    private double latitude;
+    private final double longitude;
+    private final double latitude;
 
     private SimpleLocationImpl(double longitude, double latitude) {
 
