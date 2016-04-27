@@ -16,9 +16,25 @@ import android.widget.Button;
 
 public class HomeScreenFragment extends Fragment implements View.OnClickListener{
 
+    boolean mDualPane;
+    int mCurCheckPosition = 0;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         View myView = inflater.inflate(R.layout.home_screen_layout, container, false);
 
         Button start_Button = (Button) myView.findViewById(R.id.start_button);
@@ -35,6 +51,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
+
         Fragment newFragment = null;
 // switch statement send to the correct fragment
         switch (v.getId()) {
@@ -50,9 +67,18 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        // Replace whatever is in the fragment_container view with this fragment,
+        if (mDualPane) {
+            // In dual-pane mode, show fragment in sideContent
+            transaction.replace(R.id.sideContent, newFragment);
+
+        }
+        else{
+            // Replace whatever is in the fragment_container view with this fragment,
+            transaction.replace(R.id.FragmentContainer, newFragment);
+        }
+
         // and add the transaction to the back stack
-        transaction.replace(R.id.FragmentContainer, newFragment);
+
         transaction.addToBackStack(null);
 
         // Commit the transaction
