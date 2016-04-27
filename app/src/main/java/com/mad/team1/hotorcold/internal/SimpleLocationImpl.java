@@ -1,5 +1,7 @@
 package com.mad.team1.hotorcold.internal;
 
+import android.location.Location;
+
 import com.mad.team1.hotorcold.api.SimpleLocation;
 
 /**
@@ -19,6 +21,11 @@ public class SimpleLocationImpl implements SimpleLocation {
     protected static SimpleLocation CreateNewSimpleLocation(double longitude, double latitude) {
 
         return new SimpleLocationImpl(longitude, latitude);
+    }
+
+    protected static SimpleLocation CreateNewSimpleLocation(Location location){
+
+        return new SimpleLocationImpl(location.getLongitude(), location.getLatitude());
     }
 
     @Override
