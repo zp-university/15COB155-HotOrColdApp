@@ -1,7 +1,10 @@
 package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,8 @@ public class StartGameFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.start_game_screen, container, false);
     }
@@ -30,17 +35,16 @@ public class StartGameFragment extends Fragment {
         seekBar = (SeekBar) view.findViewById(R.id.seekBar);
         textView = (TextView) view.findViewById(R.id.seekBarText);
 
-        textView.setText("Covered: " + seekBar.getProgress() + "/" + seekBar.getMax());
         if( savedInstanceState != null ) {
-            textView.setText("Covered: " + savedInstanceState.getInt("seekBarProgress") + "/" + seekBar.getMax());
+            showSeekbarDistance(savedInstanceState.getInt("seekBarProgress"));
         }
-
+        else {
+            showSeekbarDistance(seekBar.getProgress());
+        }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = seekBar.getProgress();
-
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-                progress = progresValue;
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                showSeekbarDistance(progressValue);
                 Toast.makeText(getActivity().getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
             }
 
@@ -51,10 +55,27 @@ public class StartGameFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                textView.setText("Covered: " + progress + "/" + seekBar.getMax());
+                showSeekbarDistance(seekBar.getProgress());
                 Toast.makeText(getActivity().getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
             }
         });
+
+    }
+    public void showSeekbarDistance(int progress){
+        progress = progress/2;
+        int distance;
+        if (progress < 1) {
+            distance = 1;
+            seekBar.setProgress(2);
+        } else {
+            distance = progress;
+        }
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String units = pref.getString("pref_units", "NA");
+
+        //SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_units", Context.MODE_PRIVATE);
+        textView.setText("Distance: " + distance +" "+ units);
     }
 
     @Override
