@@ -7,7 +7,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="START GAME"
-        android:id="@+id/exampleText"
+        android:text="@string/start_game_text"
+        android:id="@+id/startGameText"
         android:layout_gravity="center_horizontal" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="50"
+        android:id="@+id/seekBar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/seekBarText"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>

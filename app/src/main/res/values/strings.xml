@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HotOrCold</string>
+    <string name="app_name">Hot or Cold</string>
 
     <string name="action_settings">Settings</string>
     <string name="welcome_message">Welcome to the HotOrCold App</string>
