@@ -11,6 +11,4 @@
         android:layout_height="374dp"
         android:text="Large Text"
         android:id="@+id/temperature_text" />
-
-
 </FrameLayout>

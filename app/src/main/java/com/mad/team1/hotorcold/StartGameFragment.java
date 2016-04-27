@@ -1,13 +1,14 @@
 package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,16 +16,72 @@ import android.widget.Toast;
 /**
  * Created by GurinderSingh on 27/04/2016.
  */
-public class StartGameFragment extends Fragment {
+public class StartGameFragment extends Fragment implements View.OnClickListener{
 
     private SeekBar seekBar;
     private TextView textView;
+    boolean mDualPane;
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View myView = inflater.inflate(R.layout.start_game_screen, container, false);
+
+        Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
+
+        startGame_Button.setOnClickListener(this);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.start_game_screen, container, false);
+        //return inflater.inflate(R.layout.start_game_screen, container, false);
+        return myView;
     }
+
+
+    @Override
+    public void onClick(View v) {
+
+
+        Fragment newFragment = null;
+        // switch statement send to the correct fragment
+        switch (v.getId()) {
+            case R.id.startGameButton:
+                newFragment= new InGameFragment();
+                break;
+        }
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        if (mDualPane) {
+            // In dual-pane mode, show fragment in sideContent
+            transaction.replace(R.id.sideContent, newFragment);
+
+        }
+        else{
+            // Replace whatever is in the fragment_container view with this fragment,
+            transaction.replace(R.id.FragmentContainer, newFragment);
+        }
+
+        // and add the transaction to the back stack
+
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
