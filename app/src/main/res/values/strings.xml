@@ -7,6 +7,8 @@
     <string name="instructions_text">Instructions</string>
     <string name="title_activity_games_list">Game List</string>
 
+    <string name="low_battery_message">Battery is Low, consider closing the app</string>
+
 
     <string-array name="members">
         <item>Zack</item>
@@ -65,5 +67,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+
 
 </resources>

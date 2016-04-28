@@ -26,6 +26,13 @@
         <activity
             android:name=".SettingsFragment"
             android:label="@string/title_activity_settings"></activity>
+
+        <receiver android:name=".BatteryLevelReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
