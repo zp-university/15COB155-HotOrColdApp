@@ -22,9 +22,7 @@ import android.widget.Toast;
 /**
  * Created by GurinderSingh on 27/04/2016.
  */
-public class StartGameFragment extends Fragment implements View.OnClickListener, LocationListener{
-
-    private LocationManager locationManager;
+public class StartGameFragment extends Fragment implements View.OnClickListener{
 
     private SeekBar seekBar;
     private TextView textView;
@@ -50,11 +48,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener,
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 2000, 10, this);
-
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.start_game_screen, container, false);
@@ -150,37 +143,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener,
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("seekBarProgress", seekBar.getProgress());
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        String msg = "New Latitude: " + location.getLatitude()
-                + "New Longitude: " + location.getLongitude();
-
-        Toast.makeText(getActivity().getBaseContext(), msg, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-        Toast.makeText(getActivity().getBaseContext(), "Gps is turned off!! ",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-        Toast.makeText(getActivity().getBaseContext(), "Gps is turned on!! ",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
     }
 
 }
