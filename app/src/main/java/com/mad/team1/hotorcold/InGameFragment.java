@@ -1,6 +1,7 @@
 package com.mad.team1.hotorcold;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
@@ -13,6 +14,8 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,30 +24,52 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class InGameFragment extends Fragment implements View.OnClickListener{
 
-    boolean mDualPane;
+    private boolean mDualPane;
+    private Drawable background;
+    private View myView;
+
+    protected void startBackgroundUpdate() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                Activity activity = getActivity();
+                if(activity != null && isAdded()){
+                    Bitmap bitmap = createHeatBitmap(getHeatHex());
+                    background = new BitmapDrawable(getResources(), bitmap);
+                    backgroundHandler.obtainMessage(1).sendToTarget();
+                }
+            }
+        }, 0, 1000);
+    }
+
+    public Handler backgroundHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            FrameLayout layout = (FrameLayout) myView.findViewById(R.id.in_game_container);
+            layout.setBackground(background);
+        }
+    };
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+        startBackgroundUpdate();
 
     }
-    private Bitmap createDynamicGradient(String color) {
-        int colors[] = new int[3];
-        colors[0] = Color.parseColor(color);
-        colors[1] = Color.parseColor("#123456");
-        colors[2] = Color.parseColor("#123456");
-
-        LinearGradient gradient = new LinearGradient(0, 0, 0, 400, Color.RED, Color.TRANSPARENT, Shader.TileMode.CLAMP);
+    private static Bitmap createHeatBitmap(String color) {
         Paint p = new Paint();
         p.setDither(true);
-        //p.setShader(gradient);
         p.setColor(Color.parseColor(color));
 
         Bitmap bitmap = Bitmap.createBitmap(100, 200, Bitmap.Config.ARGB_8888);
@@ -58,22 +83,51 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View myView = inflater.inflate(R.layout.in_game_screen, container, false);
+        myView = inflater.inflate(R.layout.in_game_screen, container, false);
 
         Button gamecomplete_Button = (Button) myView.findViewById(R.id.gamecomplete_button);
         gamecomplete_Button.setOnClickListener(this);
 
-        Bitmap bitmap = createDynamicGradient("#c10c10");
-
-        // Scale it to 50 x 50
-        //Drawable drawableScaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        Drawable drawableScaled = new BitmapDrawable(getResources(), bitmap);
-
-
-        FrameLayout layout =(FrameLayout) myView.findViewById(R.id.in_game_container);
-        layout.setBackground(drawableScaled);
-
         return myView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+
+
+    private static int count = 0;
+    private static String direction = "up";
+    private static String getHeatHex(){
+
+        if(count == 0 ){
+            count ++;
+            direction = "up";
+            return "#48b4fc";
+        }
+        else if(count == 1){
+            if(direction.equals("up")) count ++;
+            else count --;
+            return "#7299d0";
+        }
+        else if(count == 2){
+            if(direction.equals("up")) count ++;
+            else count --;
+            return "#a07ca0";
+        }
+        else if(count == 3){
+            if(direction.equals("up")) count ++;
+            else count --;
+            return "#d16072";
+        }
+        else{
+            direction = "down";
+            count --;
+            return "#ff4244";
+        }
     }
 
     public void onClick(View v) {
@@ -90,7 +144,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         if (mDualPane) {
             // In dual-pane mode, show fragment in sideContent
             transaction.replace(R.id.sideContent, newFragment);
-
         }
         else{
             // Replace whatever is in the fragment_container view with this fragment,
