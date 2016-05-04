@@ -2,9 +2,15 @@ package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +22,9 @@ import android.widget.Toast;
 /**
  * Created by GurinderSingh on 27/04/2016.
  */
-public class StartGameFragment extends Fragment implements View.OnClickListener{
+public class StartGameFragment extends Fragment implements View.OnClickListener, LocationListener{
+
+    private LocationManager locationManager;
 
     private SeekBar seekBar;
     private TextView textView;
@@ -39,6 +47,11 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 2000, 10, this);
+
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.start_game_screen, container, false);
@@ -72,6 +85,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         // Commit the transaction
         transaction.commit();
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -131,6 +145,37 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         if(seekBar != null){
             outState.putInt("seekBarProgress", seekBar.getProgress());
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        String msg = "New Latitude: " + location.getLatitude()
+                + "New Longitude: " + location.getLongitude();
+
+        Toast.makeText(getActivity().getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(intent);
+        Toast.makeText(getActivity().getBaseContext(), "Gps is turned off!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Toast.makeText(getActivity().getBaseContext(), "Gps is turned on!! ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
     }
 
 }
