@@ -9,7 +9,7 @@ import com.mad.team1.hotorcold.api.GameManager;
 /**
  * @author Zack Pollard
  */
-public class GameManagerImpl implements GameManager {
+public class GameManagerImpl extends GameManager {
 
     private Game currentGame;
 

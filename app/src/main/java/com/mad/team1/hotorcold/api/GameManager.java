@@ -2,12 +2,19 @@ package com.mad.team1.hotorcold.api;
 
 import android.location.Location;
 
+import com.mad.team1.hotorcold.internal.GameManagerImpl;
+
 /**
  * @author Zack Pollard
  */
-public interface GameManager {
+public abstract class GameManager {
 
-    Game getCurrentGame();
-    Game startNewGame(Location currentPosition, int maxDistance, DistanceUnit unitPreference);
-    Game endCurrentGame();
+    public abstract Game getCurrentGame();
+    public abstract Game startNewGame(Location currentPosition, int maxDistance, DistanceUnit unitPreference);
+    public abstract Game endCurrentGame();
+
+    public static GameManager createGameManager() {
+
+        return new GameManagerImpl();
+    }
 }
