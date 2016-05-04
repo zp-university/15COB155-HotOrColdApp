@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,6 +38,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
     private boolean mDualPane;
     private Drawable background;
     private View myView;
+    private Location CurrentLocation;
 
     protected void startBackgroundUpdate() {
         Timer timer = new Timer();
@@ -55,6 +58,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         public void handleMessage(Message msg) {
             FrameLayout layout = (FrameLayout) myView.findViewById(R.id.in_game_container);
             layout.setBackground(background);
+            if(MainActivity.getLocation() != null){
+                CurrentLocation = MainActivity.getLocation();
+                Toast.makeText(getActivity(), String.valueOf(CurrentLocation.getLongitude()), Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -96,8 +103,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         super.onStart();
 
     }
-
-
 
     private static int count = 0;
     private static String direction = "up";
