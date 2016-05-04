@@ -21,11 +21,15 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         Fragment newFragment = null;
-    // switch statement send to the correct fragment
+        // switch statement send to the correct fragment
         switch (v.getId()) {
             case R.id.start_button:
                 newFragment = new StartGameFragment();
@@ -60,7 +64,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
                 newFragment= new InstructionsFragment();
                 break;
         }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
 
         if (mDualPane) {
             // In dual-pane mode, show fragment in sideContent

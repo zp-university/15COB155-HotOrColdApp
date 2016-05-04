@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity  {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,11 +20,18 @@ public class MainActivity extends AppCompatActivity  {
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomeScreenFragment homeFragment = new HomeScreenFragment();
-        fragmentTransaction.add(R.id.FragmentContainer, homeFragment);
-        fragmentTransaction.commit();
+        if (savedInstanceState == null) {
+            // The Activity is NOT being re-created so we can instantiate a new Fragment
+            // and add it to the Activity
+            HomeScreenFragment homeFragment = new HomeScreenFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.FragmentContainer, homeFragment, "HOME_FRAGMENT")
+                    .commit();
+        } else {
+            // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
+        }
+
     }
 
     @Override
