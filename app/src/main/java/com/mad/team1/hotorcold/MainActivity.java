@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    public class MyBatteryLevelReceiver extends BroadcastReceiver
+    /*public class MyBatteryLevelReceiver extends BroadcastReceiver
 
     {
 
@@ -51,6 +51,6 @@ public class MainActivity extends AppCompatActivity  {
             }
         }
 
-    }
+    }*/
 
 }

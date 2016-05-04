@@ -4,10 +4,49 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="START GAME"
-        android:id="@+id/exampleText"
-        android:layout_gravity="center_horizontal" />
+        android:text="@string/start_game_title"
+        android:id="@+id/startGameText"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:padding="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/start_game_text"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:padding="20dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="50"
+        android:id="@+id/seekBar"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/seekBarText"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:paddingBottom="20dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_game_title"
+        android:id="@+id/startGameButton"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored" />
+
 </LinearLayout>
