@@ -19,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mad.team1.hotorcold.api.DistanceUnit;
+
 /**
  * Created by GurinderSingh on 27/04/2016.
  */
@@ -27,6 +29,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     private SeekBar seekBar;
     private TextView textView;
     boolean mDualPane;
+    private String unitTypePreference;
 
 
     @Override
@@ -35,6 +38,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+
     }
 
     @Override
@@ -45,6 +49,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        unitTypePreference = pref.getString("pref_units", "");
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.start_game_screen, container, false);
@@ -59,9 +66,18 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Fragment newFragment = null;
         // switch statement send to the correct fragment
         switch (v.getId()) {
-            case R.id.startGameButton:
+            case R.id.startGameButton: {
                 newFragment= new InGameFragment();
+
+                DistanceUnit distanceUnit;
+                switch (unitTypePreference){
+                    case "Metric": distanceUnit = DistanceUnit.KILOMETERS; break;
+                    case "Imperial": distanceUnit = DistanceUnit.MILES; break;
+                    default: distanceUnit = DistanceUnit.NAUTICAL_MILES; break;
+                }
+                MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), seekBar.getProgress()/2, distanceUnit);
                 break;
+            }
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -119,10 +135,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
             distance = progress;
         }
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String unitType = pref.getString("pref_units", "");
+
         String units;
-        switch (unitType){
+        switch (unitTypePreference){
             case "Metric": units = "Km"; break;
             case "Imperial": units = "Miles"; break;
             default: units = ""; break;

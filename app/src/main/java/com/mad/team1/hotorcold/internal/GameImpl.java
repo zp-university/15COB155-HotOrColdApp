@@ -151,9 +151,9 @@ public class GameImpl implements Game {
         int green = 182 - ((int)(115F * percentageDistance));
         int blue = 255 - ((int)(188F * percentageDistance));
 
-        String hexRed = Integer.toHexString(red).toUpperCase().substring(2);
-        String hexGreen = Integer.toHexString(green).toUpperCase().substring(2);
-        String hexBlue = Integer.toHexString(blue).toUpperCase().substring(2);
+        String hexRed = Integer.toHexString(red).toUpperCase().substring(0, 2);
+        String hexGreen = Integer.toHexString(green).toUpperCase().substring(0, 2);
+        String hexBlue = Integer.toHexString(blue).toUpperCase().substring(0, 2);
 
         return "#" + hexRed + hexGreen + hexBlue;
     }
