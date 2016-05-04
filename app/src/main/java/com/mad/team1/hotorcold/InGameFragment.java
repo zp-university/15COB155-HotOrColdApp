@@ -1,34 +1,30 @@
 package com.mad.team1.hotorcold;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.mad.team1.hotorcold.api.Game;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class InGameFragment extends Fragment implements View.OnClickListener{
@@ -36,17 +32,18 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
     private boolean mDualPane;
     private Drawable background;
     private View myView;
+    private Location currentLocation;
 
     protected void startBackgroundUpdate() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 Activity activity = getActivity();
-                if(activity != null && isAdded()){
+                if(activity != null && isAdded() && currentLocation != null){
                     Bitmap bitmap = createHeatBitmap(getHeatHex());
                     background = new BitmapDrawable(getResources(), bitmap);
-                    backgroundHandler.obtainMessage(1).sendToTarget();
                 }
+                backgroundHandler.obtainMessage(1).sendToTarget();
             }
         }, 0, 1000);
     }
@@ -55,6 +52,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         public void handleMessage(Message msg) {
             FrameLayout layout = (FrameLayout) myView.findViewById(R.id.in_game_container);
             layout.setBackground(background);
+            if(MainActivity.getLocation() != null){
+                currentLocation = MainActivity.getLocation();
+                //Toast.makeText(getActivity(), String.valueOf("Long:" + currentLocation.getLongitude()+""), Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -97,13 +98,11 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    private int count = 0;
+    private String direction = "up";
+    private String getHeatHex(){
 
-
-    private static int count = 0;
-    private static String direction = "up";
-    private static String getHeatHex(){
-
-        if(count == 0 ){
+        /*if(count == 0 ){
             count ++;
             direction = "up";
             return "#48b4fc";
@@ -127,7 +126,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
             direction = "down";
             count --;
             return "#ff4244";
-        }
+        }*/
+
+        return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 
     public void onClick(View v) {
@@ -137,6 +138,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.gamecomplete_button:
                 newFragment= new GameCompleteFragment();
+                MainActivity.getGameManager().endCurrentGame(currentLocation);
                 break;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

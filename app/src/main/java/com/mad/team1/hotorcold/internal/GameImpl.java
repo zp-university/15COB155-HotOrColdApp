@@ -151,17 +151,17 @@ public class GameImpl implements Game {
         int green = 182 - ((int)(115F * percentageDistance));
         int blue = 255 - ((int)(188F * percentageDistance));
 
-        String hexRed = Integer.toHexString(red).toUpperCase().substring(2);
-        String hexGreen = Integer.toHexString(green).toUpperCase().substring(2);
-        String hexBlue = Integer.toHexString(blue).toUpperCase().substring(2);
+        String hexRed = Integer.toHexString(red).toUpperCase().substring(0, 2);
+        String hexGreen = Integer.toHexString(green).toUpperCase().substring(0, 2);
+        String hexBlue = Integer.toHexString(blue).toUpperCase().substring(0, 2);
 
         return "#" + hexRed + hexGreen + hexBlue;
     }
 
     @Override
-    public int calculateScore(Location currentLocation) {
+    public int calculateScore() {
 
-        SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(currentLocation);
+        SimpleLocation simpleLocation = locationHistory.get(locationHistory.size() - 1);
         double originalDistance = calculateDistanceToObjective(startPoint, DistanceUnit.METERS);
         double currentDistance = calculateDistanceToObjective(simpleLocation, DistanceUnit.METERS);
 
@@ -175,6 +175,13 @@ public class GameImpl implements Game {
         double percentageDistance = calculatePercentageDistance(simpleLocation, originalDistance);
 
         return (int) (points * percentageDistance);
+    }
+
+    @Override
+    public void endGame(Location finalLocation) {
+
+        SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(finalLocation);
+        locationHistory.add(simpleLocation);
     }
 
     protected static Game createNewGame(Location currentLocation, int maxDistance, DistanceUnit unitPreference) {

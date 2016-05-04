@@ -16,5 +16,7 @@ public interface Game {
     List<SimpleLocation> getLocationHistory();
 
     String calculateDistanceColour(Location currentLocation);
-    int calculateScore(Location currentLocation);
+    int calculateScore();
+
+    void endGame(Location finalLocation);
 }

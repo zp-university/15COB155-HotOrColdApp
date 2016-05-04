@@ -9,13 +9,19 @@ import com.mad.team1.hotorcold.api.GameManager;
 /**
  * @author Zack Pollard
  */
-public class GameManagerImpl implements GameManager {
+public class GameManagerImpl extends GameManager {
 
     private Game currentGame;
+    private Game previousGame;
 
     @Override
     public Game getCurrentGame() {
         return currentGame;
+    }
+
+    @Override
+    public Game getPreviousGame() {
+        return previousGame;
     }
 
     @Override
@@ -31,10 +37,10 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Game endCurrentGame() {
-
-        Game oldGame = currentGame;
+    public Game endCurrentGame(Location finalLocation) {
+        currentGame.endGame(finalLocation);
+        previousGame = currentGame;
         currentGame = null;
-        return oldGame;
+        return previousGame;
     }
 }
