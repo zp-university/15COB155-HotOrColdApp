@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity  {
         } else {
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
         }
-
     }
 
     @Override
