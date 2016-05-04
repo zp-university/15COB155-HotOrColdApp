@@ -79,4 +79,9 @@ public class KeyValueView extends LinearLayout {
             rightTextView.setText(rightLabel);
         }
     }
+
+    public void setText (String leftLabel, String rightLabel){
+        setLeftLabel(leftLabel);
+        setRightLabel(rightLabel);
+    }
 }

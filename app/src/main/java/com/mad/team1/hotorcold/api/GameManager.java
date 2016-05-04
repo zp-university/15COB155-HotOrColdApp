@@ -10,8 +10,9 @@ import com.mad.team1.hotorcold.internal.GameManagerImpl;
 public abstract class GameManager {
 
     public abstract Game getCurrentGame();
+    public abstract Game getPreviousGame();
     public abstract Game startNewGame(Location currentPosition, int maxDistance, DistanceUnit unitPreference);
-    public abstract Game endCurrentGame();
+    public abstract Game endCurrentGame(Location finalPosition);
 
     public static GameManager createGameManager() {
 

@@ -159,9 +159,9 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public int calculateScore(Location currentLocation) {
+    public int calculateScore() {
 
-        SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(currentLocation);
+        SimpleLocation simpleLocation = locationHistory.get(locationHistory.size() - 1);
         double originalDistance = calculateDistanceToObjective(startPoint, DistanceUnit.METERS);
         double currentDistance = calculateDistanceToObjective(simpleLocation, DistanceUnit.METERS);
 
@@ -175,6 +175,13 @@ public class GameImpl implements Game {
         double percentageDistance = calculatePercentageDistance(simpleLocation, originalDistance);
 
         return (int) (points * percentageDistance);
+    }
+
+    @Override
+    public void endGame(Location finalLocation) {
+
+        SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(finalLocation);
+        locationHistory.add(simpleLocation);
     }
 
     protected static Game createNewGame(Location currentLocation, int maxDistance, DistanceUnit unitPreference) {

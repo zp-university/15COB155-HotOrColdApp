@@ -25,11 +25,11 @@
     <com.mad.team1.hotorcold.KeyValueView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/view"
+        android:id="@+id/score_view"
         android:layout_gravity="center_horizontal"
-        custom:leftLabel="Hello Mr:"
+        custom:leftLabel=""
         custom:leftLabelStyle="@style/MyTextViewStyle"
-        custom:rightLabel="Whats Up Buddy!"
+        custom:rightLabel=""
         custom:rightLabelStyle="@style/MyTextViewStyle"/>
 
 

@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.mad.team1.hotorcold.api.Game;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -136,6 +138,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.gamecomplete_button:
                 newFragment= new GameCompleteFragment();
+                MainActivity.getGameManager().endCurrentGame(currentLocation);
                 break;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
