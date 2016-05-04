@@ -32,12 +32,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
-
-
     }
 
     @Override
@@ -71,17 +68,13 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         if (mDualPane) {
             // In dual-pane mode, show fragment in sideContent
             transaction.replace(R.id.sideContent, newFragment);
-
         }
         else{
             // Replace whatever is in the fragment_container view with this fragment,
             transaction.replace(R.id.FragmentContainer, newFragment);
         }
-
         // and add the transaction to the back stack
-
         transaction.addToBackStack(null);
-
         // Commit the transaction
         transaction.commit();
     }
@@ -142,7 +135,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("seekBarProgress", seekBar.getProgress());
+        if(seekBar != null){
+            outState.putInt("seekBarProgress", seekBar.getProgress());
+        }
     }
 
 }
