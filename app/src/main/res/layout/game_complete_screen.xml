@@ -28,9 +28,9 @@
         android:id="@+id/score_view"
         android:layout_gravity="center_horizontal"
         custom:leftLabel=""
-        custom:leftLabelStyle="@style/MyTextViewStyle"
+        custom:leftLabelStyle="@style/MyTextViewStyleLeft"
         custom:rightLabel=""
-        custom:rightLabelStyle="@style/MyTextViewStyle"/>
+        custom:rightLabelStyle="@style/MyTextViewStyleRight"/>
 
 
 </LinearLayout>

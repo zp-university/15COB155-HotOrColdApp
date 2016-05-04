@@ -45,7 +45,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
                 }
                 backgroundHandler.obtainMessage(1).sendToTarget();
             }
-        }, 0, 1000);
+        }, 0, 300);
     }
 
     public Handler backgroundHandler = new Handler() {
@@ -54,7 +54,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
             layout.setBackground(background);
             if(MainActivity.getLocation() != null){
                 currentLocation = MainActivity.getLocation();
-                //Toast.makeText(getActivity(), String.valueOf("Long:" + currentLocation.getLongitude()+""), Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -92,47 +91,11 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         return myView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    private int count = 0;
-    private String direction = "up";
     private String getHeatHex(){
-
-        /*if(count == 0 ){
-            count ++;
-            direction = "up";
-            return "#48b4fc";
-        }
-        else if(count == 1){
-            if(direction.equals("up")) count ++;
-            else count --;
-            return "#7299d0";
-        }
-        else if(count == 2){
-            if(direction.equals("up")) count ++;
-            else count --;
-            return "#a07ca0";
-        }
-        else if(count == 3){
-            if(direction.equals("up")) count ++;
-            else count --;
-            return "#d16072";
-        }
-        else{
-            direction = "down";
-            count --;
-            return "#ff4244";
-        }*/
-
         return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 
     public void onClick(View v) {
-
         Fragment newFragment = null;
         // switch statement send to the correct fragment
         switch (v.getId()) {
@@ -153,7 +116,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         }
 
         // and add the transaction to the back stack
-
         transaction.addToBackStack(null);
 
         // Commit the transaction

@@ -2,8 +2,10 @@ package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,18 +30,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
 
     private SeekBar seekBar;
     private TextView textView;
-    boolean mDualPane;
+    private boolean mDualPane;
     private String unitTypePreference;
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        // Check to see if we have a sideContent in which to embed a fragment directly
-        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
-        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,52 +42,31 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
+        //startGame_Button.setBackgroundResource(R.drawable.btn_disabled);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         unitTypePreference = pref.getString("pref_units", "");
+        boolean locationAvailable = false;
+
+        getActivity().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //locationAvailable = true;
+            }
+        }, new IntentFilter("HotOrColdLocationChanged"));
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.start_game_screen, container, false);
         return myView;
     }
 
-
     @Override
-    public void onClick(View v) {
-
-
-        Fragment newFragment = null;
-        // switch statement send to the correct fragment
-        switch (v.getId()) {
-            case R.id.startGameButton: {
-                newFragment= new InGameFragment();
-
-                DistanceUnit distanceUnit;
-                switch (unitTypePreference){
-                    case "Metric": distanceUnit = DistanceUnit.KILOMETERS; break;
-                    case "Imperial": distanceUnit = DistanceUnit.MILES; break;
-                    default: distanceUnit = DistanceUnit.NAUTICAL_MILES; break;
-                }
-                MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), seekBar.getProgress()/2, distanceUnit);
-                break;
-            }
-        }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        if (mDualPane) {
-            // In dual-pane mode, show fragment in sideContent
-            transaction.replace(R.id.sideContent, newFragment);
-        }
-        else{
-            // Replace whatever is in the fragment_container view with this fragment,
-            transaction.replace(R.id.FragmentContainer, newFragment);
-        }
-        // and add the transaction to the back stack
-        transaction.addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
     }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -123,8 +95,50 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
     }
+
+    @Override
+    public void onClick(View v) {
+        Fragment newFragment = null;
+        boolean validClick = true;
+        // switch statement send to the correct fragment
+        switch (v.getId()) {
+            case R.id.startGameButton: {
+                if(MainActivity.getLocation() != null){
+                    newFragment= new InGameFragment();
+                    DistanceUnit distanceUnit;
+                    switch (unitTypePreference){
+                        case "Metric": distanceUnit = DistanceUnit.KILOMETERS; break;
+                        case "Imperial": distanceUnit = DistanceUnit.MILES; break;
+                        default: distanceUnit = DistanceUnit.NAUTICAL_MILES; break;
+                    }
+                    MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), seekBar.getProgress()/2, distanceUnit);
+                } else{
+                    validClick = false;
+                    Toast.makeText(getActivity(), "Oops! Still searching for GPS signal", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+        if(validClick){
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            if (mDualPane) {
+                // In dual-pane mode, show fragment in sideContent
+                transaction.replace(R.id.sideContent, newFragment);
+            }
+            else{
+                // Replace whatever is in the fragment_container view with this fragment,
+                transaction.replace(R.id.FragmentContainer, newFragment);
+            }
+            // and add the transaction to the back stack
+            transaction.addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+        }
+    }
+
+
+
     public void showSeekbarDistance(int progress){
         progress = progress/2;
         int distance;
@@ -144,8 +158,10 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         }
 
         //SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_units", Context.MODE_PRIVATE);
-        textView.setText("Distance: " + distance +" "+ units);
+        textView.setText("Distance: " + distance + " " + units);
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
