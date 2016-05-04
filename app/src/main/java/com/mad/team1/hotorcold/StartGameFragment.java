@@ -80,9 +80,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         transaction.commit();
     }
 
-
-
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

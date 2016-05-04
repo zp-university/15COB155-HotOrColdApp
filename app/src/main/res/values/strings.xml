@@ -9,7 +9,6 @@
 
     <string name="low_battery_message">Battery is Low, consider closing the app</string>
 
-
     <string-array name="members">
         <item>Zack</item>
         <item>Matt</item>
@@ -25,6 +24,7 @@
 
     <!-- Strings related to Game Complete screen -->
     <string name="game_complete_title">Game Complete</string>
+    <string name="game_complete_button">End Game</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_units_title">Game List</string>
