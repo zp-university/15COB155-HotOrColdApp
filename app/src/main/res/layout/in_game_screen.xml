@@ -17,8 +17,15 @@
         android:text="Large Text"
         android:id="@+id/temperature_text" />
 
-    <com.mad.team1.hotorcold.RadiusOverlayView
+    <LinearLayout
         android:id="@+id/google_map_container"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/clipping_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_gravity="center"/>

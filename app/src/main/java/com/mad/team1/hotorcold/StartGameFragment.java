@@ -43,11 +43,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
-        //startGame_Button.setBackgroundResource(R.drawable.btn_disabled);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         unitTypePreference = pref.getString("pref_units", "");
-        boolean locationAvailable = false;
 
         getActivity().registerReceiver(new BroadcastReceiver() {
             @Override
@@ -163,9 +161,11 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         textView.setText("Distance: " + distance + " " + units);
     }
 
-    public void clearBackStack(){
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
+
 
 
     @Override
