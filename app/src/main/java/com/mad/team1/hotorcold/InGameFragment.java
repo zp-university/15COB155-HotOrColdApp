@@ -21,10 +21,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Timer;
@@ -37,12 +39,21 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     private Drawable background;
     private View myView;
     private Location currentLocation;
+    private GoogleMap gameMap;
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+    public void onMapReady(GoogleMap map) {
+        gameMap = map;
+
+        gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
+        gameMap.setMyLocationEnabled(true);
+        gameMap.getUiSettings().setScrollGesturesEnabled(false);
+        gameMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+            }
+        });
     }
 
     protected void startBackgroundUpdate() {
@@ -63,8 +74,13 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         public void handleMessage(Message msg) {
             FrameLayout layout = (FrameLayout) myView.findViewById(R.id.in_game_container);
             layout.setBackground(background);
+
             if(MainActivity.getLocation() != null){
                 currentLocation = MainActivity.getLocation();
+                myView.findViewById(R.id.clipping_view).invalidate();
+                if(gameMap != null && gameMap.getCameraPosition().zoom == 10){
+                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                }
             }
         }
     };
@@ -105,12 +121,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         fragmentTransaction.commit();
         myMapFragment.getMapAsync(this);
 
-
-
         return myView;
     }
 
-    private String getHeatHex(){
+    public String getHeatHex(){
         return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 

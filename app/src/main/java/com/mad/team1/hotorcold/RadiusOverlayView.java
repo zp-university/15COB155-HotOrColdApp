@@ -56,7 +56,8 @@ public class RadiusOverlayView extends LinearLayout {
         RectF outerRectangle = new RectF(0, 0, getWidth(), getHeight());
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG); // Anti alias allows for smooth corners
-        paint.setColor(Color.WHITE); // This is the color of your activity background
+
+        paint.setColor(Color.parseColor(MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(MainActivity.getLocation()))); // This is the color of your activity background
         osCanvas.drawRect(outerRectangle, paint);
 
         //paint.setColor(Color.TRANSPARENT); // An obvious color to help debugging

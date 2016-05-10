@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     private static final GameManager gameManager = GameManager.createGameManager();
     private static final int  READ_LOCATION_PERMISSIONS_REQUEST = 1;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
         }
 
-//        getPermissionToReadLocation();
-//        createLocationManager();
     }
 
 
