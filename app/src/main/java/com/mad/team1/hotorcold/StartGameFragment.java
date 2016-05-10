@@ -137,8 +137,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-
-
     public void showSeekbarDistance(int progress){
         progress = progress/2;
         int distance;
@@ -148,7 +146,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         } else {
             distance = progress;
         }
-
 
         String units;
         switch (unitTypePreference){

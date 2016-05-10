@@ -1,6 +1,5 @@
 package com.mad.team1.hotorcold;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
@@ -14,27 +13,20 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.Display;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
+import com.mad.team1.hotorcold.api.Game;
 
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
@@ -55,6 +47,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             @Override
             public void onMapLoaded() {
                 gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                gameMap.getUiSettings().setZoomGesturesEnabled(false);
             }
         });
 
@@ -77,6 +70,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                     gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
                     mapLoading = true;
                 }
+
+                TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
+                //distanceTravelled.setText("Distance Travelled: "+ MainActivity.getGameManager());
             }
         });
     }
