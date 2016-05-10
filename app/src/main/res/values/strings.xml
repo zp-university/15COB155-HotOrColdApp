@@ -27,6 +27,9 @@
 
     <!-- Strings related to Game Complete screen -->
     <string name="game_complete_title">Game Complete</string>
+    <string name="go_home">Go Home</string>
+
+    <!-- Strings related to In Game screen -->
     <string name="game_complete_button">End Game</string>
 
     <!-- Strings related to Settings -->

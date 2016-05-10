@@ -4,23 +4,30 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 
-public class GameCompleteFragment extends Fragment {
+public class GameCompleteFragment extends Fragment implements View.OnClickListener{
 
-    public static final String TAG = "YOUR-TAG-NAME";
+    private boolean mDualPane;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.game_complete_screen, container, false);
+        View myView = inflater.inflate(R.layout.game_complete_screen, container, false);
+
+        Button leaderboard_Button = (Button) myView.findViewById(R.id.leaderboards_button);
+        Button home_Button = (Button) myView.findViewById(R.id.go_home_button);
+
+        leaderboard_Button.setOnClickListener(this);
+        home_Button.setOnClickListener(this);
+
+        return myView;
     }
 
     @Override
@@ -77,4 +84,32 @@ public class GameCompleteFragment extends Fragment {
         fm.popBackStack(gameFragment, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    public void onClick(View v){
+        Fragment newFragment = null;
+        // switch statement send to the correct fragment
+        switch (v.getId()) {
+            case R.id.leaderboards_button:
+                newFragment= new LeaderboardsFragment();
+                break;
+            case R.id.go_home_button:
+                newFragment= new HomeScreenFragment();
+                break;
+        }
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        if (mDualPane) {
+            // In dual-pane mode, show fragment in sideContent
+            transaction.replace(R.id.sideContent, newFragment);
+        }
+        else{
+            // Replace whatever is in the fragment_container view with this fragment,
+            transaction.replace(R.id.FragmentContainer, newFragment);
+        }
+
+        // and add the transaction to the back stack
+        transaction.addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
 }

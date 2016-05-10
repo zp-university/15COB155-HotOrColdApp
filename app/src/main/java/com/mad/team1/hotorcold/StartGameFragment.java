@@ -147,12 +147,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         textView.setText("Distance: " + distance + " " + units);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
