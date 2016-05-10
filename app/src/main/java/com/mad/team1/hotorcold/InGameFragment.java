@@ -14,25 +14,36 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.mad.team1.hotorcold.api.Game;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class InGameFragment extends Fragment implements View.OnClickListener{
+public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
     private boolean mDualPane;
     private Drawable background;
     private View myView;
     private Location currentLocation;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Marker"));
+    }
 
     protected void startBackgroundUpdate() {
         Timer timer = new Timer();
@@ -65,7 +76,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
         startBackgroundUpdate();
-
     }
     private static Bitmap createHeatBitmap(String color) {
         Paint p = new Paint();
@@ -87,6 +97,15 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
 
         Button gamecomplete_Button = (Button) myView.findViewById(R.id.gamecomplete_button);
         gamecomplete_Button.setOnClickListener(this);
+
+        MapFragment myMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.google_map_container, myMapFragment);
+        fragmentTransaction.commit();
+        myMapFragment.getMapAsync(this);
+
+
 
         return myView;
     }
@@ -116,7 +135,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener{
         }
 
         // and add the transaction to the back stack
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();

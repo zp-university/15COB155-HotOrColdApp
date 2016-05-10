@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mad.team1.hotorcold">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -23,20 +26,22 @@
             </intent-filter>
         </activity>
 
-    <activity android:name=".MainActivity">
-    </activity>
+        <activity android:name=".MainActivity" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".SettingsFragment"
             android:label="@string/title_activity_settings"></activity>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCPldu8pmf5Tn3DuXrtsUhL5fANn7IWSFc"/>
     </application>
 
 </manifest>
