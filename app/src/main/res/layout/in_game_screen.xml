@@ -26,10 +26,12 @@
 
     <TextView
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="374dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/distance_travelled" />
+        android:id="@+id/distance_travelled"
+        android:layout_gravity="center"
+        android:textColor="#FFF"/>
 
     <Button
         android:layout_width="wrap_content"
