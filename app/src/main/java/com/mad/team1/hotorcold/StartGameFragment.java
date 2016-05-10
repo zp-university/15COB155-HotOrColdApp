@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,7 +116,8 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
                     MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), seekBar.getProgress()/2, distanceUnit);
                 } else{
                     validClick = false;
-                    Toast.makeText(getActivity(), "Oops! Still searching for GPS signal", Toast.LENGTH_SHORT).show();
+
+                    Snackbar.make(v, "Oops! Still searching for GPS signal", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             }
