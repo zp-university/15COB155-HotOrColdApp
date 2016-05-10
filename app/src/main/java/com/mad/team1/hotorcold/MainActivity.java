@@ -54,13 +54,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 //        createLocationManager();
     }
 
-
+//Check permission to read location onResume so if user navigates away from app then back in still checks location permission
     protected void onResume(){
         super.onResume();
         getPermissionToReadLocation();
         createLocationManager();
-
-
     }
 
     public void getPermissionToReadLocation() {
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     public void onProviderEnabled(String provider) {
         Snackbar gpsOnSnackBar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.gps_on, Snackbar.LENGTH_SHORT);
         gpsOnSnackBar.show();
-
     }
 
     @Override
@@ -147,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
 
     public static GameManager getGameManager() {
+
         return gameManager;
     }
 
