@@ -26,6 +26,10 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
     private boolean mDualPane;
@@ -70,11 +74,18 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 }
 
                 TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
-                distanceTravelled.setText("Distance Travelled: "+ MainActivity.getGameManager().getCurrentGame().getTravelDistance()+"m");
+                distanceTravelled.setText("Distance Travelled: " + MainActivity.getGameManager().getCurrentGame().getTravelDistance() + "m");
+
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                Date time = new Date(System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime() - 3600000);
+                System.out.println(System.currentTimeMillis());
+                System.out.println(MainActivity.getGameManager().getCurrentGame().getStartTime());
+                System.out.println(dateFormat.format(time));
+                TextView timePlayed = (TextView)getActivity().findViewById(R.id.time_played);
+                timePlayed.setText("Time Played: "+ dateFormat.format(time) +"s");
             }
         });
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
