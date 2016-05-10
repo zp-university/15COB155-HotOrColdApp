@@ -72,7 +72,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 }
 
                 TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
-                //distanceTravelled.setText("Distance Travelled: "+ MainActivity.getGameManager());
+                //distanceTravelled.setText("Distance Travelled: "+ MainActivity.getGameManager().getCurrentGame().);
             }
         });
     }

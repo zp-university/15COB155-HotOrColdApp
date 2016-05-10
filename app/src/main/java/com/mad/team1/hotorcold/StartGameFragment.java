@@ -39,23 +39,12 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View myView = inflater.inflate(R.layout.start_game_screen, container, false);
-
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         unitTypePreference = pref.getString("pref_units", "");
 
-        getActivity().registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //locationAvailable = true;
-            }
-        }, new IntentFilter("HotOrColdLocationChanged"));
-
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.start_game_screen, container, false);
         return myView;
     }
 
