@@ -43,11 +43,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         Button startGame_Button = (Button) myView.findViewById(R.id.startGameButton);
 
         startGame_Button.setOnClickListener(this);
-        //startGame_Button.setBackgroundResource(R.drawable.btn_disabled);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         unitTypePreference = pref.getString("pref_units", "");
-        boolean locationAvailable = false;
 
         getActivity().registerReceiver(new BroadcastReceiver() {
             @Override
@@ -139,8 +137,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-
-
     public void showSeekbarDistance(int progress){
         progress = progress/2;
         int distance;
@@ -150,7 +146,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         } else {
             distance = progress;
         }
-
 
         String units;
         switch (unitTypePreference){
@@ -162,7 +157,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         //SharedPreferences preferences = this.getActivity().getSharedPreferences("pref_units", Context.MODE_PRIVATE);
         textView.setText("Distance: " + distance + " " + units);
     }
-
 
 
     @Override

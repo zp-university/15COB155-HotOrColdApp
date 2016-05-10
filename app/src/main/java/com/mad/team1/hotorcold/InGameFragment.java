@@ -1,73 +1,82 @@
 package com.mad.team1.hotorcold;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.Display;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
+import com.mad.team1.hotorcold.api.Game;
 
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
     private boolean mDualPane;
     private Drawable background;
+    private Drawable mapClipper;
     private View myView;
+    private GoogleMap gameMap;
+    private boolean mapLoading = false;
     private Location currentLocation;
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
-    }
+    public void onMapReady(GoogleMap map) {
+        gameMap = map;
+        gameMap.setMyLocationEnabled(true);
+        gameMap.getUiSettings().setScrollGesturesEnabled(false);
+        gameMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                gameMap.getUiSettings().setZoomGesturesEnabled(false);
+            }
+        });
 
-    protected void startBackgroundUpdate() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                Activity activity = getActivity();
-                if(activity != null && isAdded() && currentLocation != null){
-                    Bitmap bitmap = createHeatBitmap(getHeatHex());
-                    background = new BitmapDrawable(getResources(), bitmap);
+        gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location){
+                currentLocation = location;
+                Bitmap bgBitmap = createBgHeatBitmap(getHeatHex());
+                Bitmap clipperBitmap = createClipperHeatBitmap(getHeatHex(), 600, 600);
+                background = new BitmapDrawable(getResources(), bgBitmap);
+                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
+
+                myView.findViewById(R.id.in_game_container).setBackground(background);
+                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
+
+                if(gameMap.getCameraPosition().zoom == 15F){
+                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
                 }
-                backgroundHandler.obtainMessage(1).sendToTarget();
+                else if(!mapLoading){
+                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
+                    mapLoading = true;
+                }
+
+                TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
+                //distanceTravelled.setText("Distance Travelled: "+ MainActivity.getGameManager());
             }
-        }, 0, 300);
+        });
     }
 
-    public Handler backgroundHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            FrameLayout layout = (FrameLayout) myView.findViewById(R.id.in_game_container);
-            layout.setBackground(background);
-            if(MainActivity.getLocation() != null){
-                currentLocation = MainActivity.getLocation();
-            }
-        }
-    };
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -75,11 +84,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
-        startBackgroundUpdate();
     }
-    private static Bitmap createHeatBitmap(String color) {
-        Paint p = new Paint();
-        p.setDither(true);
+    private static Bitmap createBgHeatBitmap(String color) {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(Color.parseColor(color));
 
         Bitmap bitmap = Bitmap.createBitmap(100, 200, Bitmap.Config.ARGB_8888);
@@ -87,6 +94,23 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         canvas.drawRect(new RectF(0, 0, 100, 200), p);
 
         return bitmap;
+    }
+    private static Bitmap createClipperHeatBitmap(String color, int height, int width) {
+        Bitmap windowFrame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(windowFrame);
+
+        RectF outerRectangle = new RectF(0, 0, width, height);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(Color.parseColor(color));
+        canvas.drawRect(outerRectangle, p);
+
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT)); // A out B http://en.wikipedia.org/wiki/File:Alpha_compositing.svg
+        float centerX = width / 2;
+        float centerY = height / 2;
+        float radius = Math.min(width, height) / 2 - 50;
+        canvas.drawCircle(centerX, centerY, radius, p);
+
+        return windowFrame;
     }
 
 
@@ -105,10 +129,11 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         myMapFragment.getMapAsync(this);
 
 
+
         return myView;
     }
 
-    private String getHeatHex(){
+    public String getHeatHex(){
         return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 
