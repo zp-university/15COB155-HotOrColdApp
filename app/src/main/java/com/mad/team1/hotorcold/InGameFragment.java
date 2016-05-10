@@ -16,12 +16,15 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,6 +93,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             }
         });
 
+
         gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
@@ -117,7 +121,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 String outputTime = String.format("%02d min, %02d sec",
                         TimeUnit.MILLISECONDS.toMinutes(time),
                         TimeUnit.MILLISECONDS.toSeconds(time) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
                 );
 
                 TextView timePlayed = (TextView) getActivity().findViewById(R.id.time_played);
@@ -145,6 +149,28 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    Snackbar.make(v, "Please end the game to get back to the menu", Snackbar.LENGTH_SHORT).show();
+                    // handle back button's click listener
+                    return true;
+                }
+                return false;
+            }
+
+
+        });
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
 
@@ -159,10 +185,12 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 
-
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        gameMap.setOnMyLocationChangeListener(null);
     }
 
     public String getHeatHex(){
