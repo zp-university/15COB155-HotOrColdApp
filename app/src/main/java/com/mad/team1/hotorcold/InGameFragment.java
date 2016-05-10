@@ -90,6 +90,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         });
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
@@ -151,8 +152,8 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setContentTitle("My notification")
-                .setContentText("Hello World!");
+                .setContentTitle("HotOrCold")
+                .setContentText("Game in Progress");
 
         // Sets an ID for the notification
         int mNotificationId = 001;
