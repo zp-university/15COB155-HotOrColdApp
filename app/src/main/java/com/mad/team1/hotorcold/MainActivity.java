@@ -12,11 +12,13 @@ import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
+import android.view.View;
 import android.widget.Toast;
 
 import com.mad.team1.hotorcold.api.Game;
@@ -47,16 +49,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         } else {
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
         }
+
+//        getPermissionToReadLocation();
+//        createLocationManager();
+    }
+
+
+    protected void onResume(){
+        super.onResume();
         getPermissionToReadLocation();
         createLocationManager();
+
+
     }
 
     public void getPermissionToReadLocation() {
-        // 1) Use the support library version ContextCompat.checkSelfPermission(...) to avoid
-        // checking the build version since Context.checkSelfPermission(...) is only available
-        // in Marshmallow
-        // 2) Always check for permission (even if permission has already been granted)
-        // since the user can revoke permissions at any time through Settings
+
+        // Check for Fine Location permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -88,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
 
     private static Location currentLocation;
+
     public static Location getLocation(){
         return currentLocation;
     }
@@ -119,15 +129,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     @Override
     public void onProviderDisabled(String provider) {
     // If GPS is OFF send User to Location Settings Page
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-        Toast.makeText(getBaseContext(), "Gps is turned off!! ", Toast.LENGTH_SHORT).show();
+        Snackbar gpsOffSnackBar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.gps_off, Snackbar.LENGTH_INDEFINITE);
+        gpsOffSnackBar.setAction(R.string.goToLocationSettings, new goToSettingsListener());
+        gpsOffSnackBar.show();
+
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        Snackbar gpsOnSnackBar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.gps_on, Snackbar.LENGTH_SHORT);
+        gpsOnSnackBar.show();
 
-        Toast.makeText(getBaseContext(), "Gps is turned on!! ", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -136,6 +148,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     public static GameManager getGameManager() {
         return gameManager;
+    }
+
+
+    public class goToSettingsListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+
+        }
     }
 
 }
