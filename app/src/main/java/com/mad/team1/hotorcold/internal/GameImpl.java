@@ -27,7 +27,8 @@ public class GameImpl implements Game {
     private final SimpleLocation objective;
     private final SimpleLocation startPoint;
     private double startDistance;
-    private long startTime;
+    private final long startTime;
+    private long travelDistance;
     private List<SimpleLocation> locationHistory;
 
     private GameImpl(SimpleLocation startPoint, int maxDistance, DistanceUnit unitPreference) {
@@ -35,6 +36,7 @@ public class GameImpl implements Game {
         this.startPoint = startPoint;
         this.startTime = System.currentTimeMillis();
         this.locationHistory = new LinkedList<>();
+        addToLocationHistory(startPoint);
         objective = generateObjective(startPoint, maxDistance, unitPreference);
         this.startDistance = calculateDistanceToObjective(startPoint, DistanceUnit.METERS);
     }
@@ -59,9 +61,38 @@ public class GameImpl implements Game {
         return startTime;
     }
 
+    public long getTravelDistance() {
+        return travelDistance;
+    }
+
     @Override
     public List<SimpleLocation> getLocationHistory() {
         return locationHistory;
+    }
+
+    private void addToLocationHistory(SimpleLocation simpleLocation) {
+        locationHistory.add(simpleLocation);
+        if(locationHistory.size() > 1) {
+
+            travelDistance += calculateDistanceBetweenPoints(locationHistory.get(locationHistory.size() - 2), simpleLocation);
+        }
+    }
+
+    private float calculateDistanceBetweenPoints(SimpleLocation lastPoint, SimpleLocation nextPoint) {
+
+        double nextLatitude = nextPoint.getLatitude();
+        double nextLongitude = nextPoint.getLongitude();
+        double lastLatitude = lastPoint.getLatitude();
+        double lastLongitude = lastPoint.getLongitude();
+
+        double earthRadius = 6371000;
+        double dLat = Math.toRadians(nextLatitude-lastLatitude);
+        double dLng = Math.toRadians(nextLongitude-lastLongitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lastLatitude)) * Math.cos(Math.toRadians(nextLatitude)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return (float) (earthRadius * c);
     }
 
     private SimpleLocation generateObjective(SimpleLocation startPoint, int maxDistance, DistanceUnit unitPreference){
@@ -101,19 +132,7 @@ public class GameImpl implements Game {
 
     private float calculateDistanceToObjective(SimpleLocation currentLocation, DistanceUnit unit) {
 
-        double objectiveLatitude = getObjective().getLatitude();
-        double objectiveLongitude = getObjective().getLongitude();
-        double currentLatitude = currentLocation.getLatitude();
-        double currentLongitude = currentLocation.getLongitude();
-
-        double earthRadius = 6371000;
-        double dLat = Math.toRadians(objectiveLatitude-currentLatitude);
-        double dLng = Math.toRadians(objectiveLongitude-currentLongitude);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat/2) +
-                Math.cos(Math.toRadians(currentLatitude)) * Math.cos(Math.toRadians(objectiveLatitude)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        float dist = (float) (earthRadius * c);
+        float dist = calculateDistanceBetweenPoints(currentLocation, getObjective());
 
         switch(unit) {
 
@@ -138,6 +157,8 @@ public class GameImpl implements Game {
     public String calculateDistanceColour(Location currentLocation) {
 
         SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(currentLocation);
+
+        addToLocationHistory(simpleLocation);
 
         double percentageDistance = calculatePercentageDistance(simpleLocation, startDistance);
 
@@ -181,7 +202,7 @@ public class GameImpl implements Game {
     public void endGame(Location finalLocation) {
 
         SimpleLocation simpleLocation = SimpleLocationImpl.createNewSimpleLocation(finalLocation);
-        locationHistory.add(simpleLocation);
+        addToLocationHistory(simpleLocation);
     }
 
     protected static Game createNewGame(Location currentLocation, int maxDistance, DistanceUnit unitPreference) {
