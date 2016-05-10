@@ -12,6 +12,7 @@ public interface Game {
     SimpleLocation getObjective();
     SimpleLocation getStartPoint();
     double getStartDistance();
+    long getTravelDistance();
     long getStartTime();
     List<SimpleLocation> getLocationHistory();
 
