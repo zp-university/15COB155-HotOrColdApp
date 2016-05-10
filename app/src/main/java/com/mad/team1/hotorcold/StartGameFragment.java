@@ -163,9 +163,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         textView.setText("Distance: " + distance + " " + units);
     }
 
-    public void clearBackStack(){
-
-    }
 
 
     @Override
