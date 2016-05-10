@@ -8,6 +8,9 @@
     <string name="title_activity_games_list">Game List</string>
 
     <string name="low_battery_message">Battery is Low, consider closing the app</string>
+    <string name="gps_off">Please switch on GPS</string>
+    <string name="gps_on">GPS is On - Thank You</string>
+    <string name="goToLocationSettings">Settings</string>
 
     <string-array name="members">
         <item>Zack</item>
