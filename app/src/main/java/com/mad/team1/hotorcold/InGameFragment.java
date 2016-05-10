@@ -99,12 +99,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         gamecomplete_Button.setOnClickListener(this);
 
         MapFragment myMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction =
-                getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.google_map_container, myMapFragment);
         fragmentTransaction.commit();
         myMapFragment.getMapAsync(this);
-
 
 
         return myView;
