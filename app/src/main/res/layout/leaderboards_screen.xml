@@ -10,4 +10,10 @@
         android:id="@+id/leaderboards_text"
         android:layout_gravity="center_horizontal" />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/leaderboard_listview"
+        ></ListView>
+
 </LinearLayout>
