@@ -25,10 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
@@ -39,53 +36,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     private GoogleMap gameMap;
     private boolean mapLoading = false;
     private Location currentLocation;
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        gameMap = map;
-        gameMap.setMyLocationEnabled(true);
-        gameMap.getUiSettings().setScrollGesturesEnabled(false);
-        gameMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-                gameMap.getUiSettings().setZoomGesturesEnabled(false);
-            }
-        });
-
-        gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location){
-                currentLocation = location;
-                Bitmap bgBitmap = createBgHeatBitmap(getHeatHex());
-                Bitmap clipperBitmap = createClipperHeatBitmap(getHeatHex(), 600, 600);
-                background = new BitmapDrawable(getResources(), bgBitmap);
-                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
-
-                myView.findViewById(R.id.in_game_container).setBackground(background);
-                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
-
-                if(gameMap.getCameraPosition().zoom == 15F){
-                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
-                }
-                else if(!mapLoading){
-                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
-                    mapLoading = true;
-                }
-
-                TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
-                distanceTravelled.setText("Distance Travelled: " + MainActivity.getGameManager().getCurrentGame().getTravelDistance() + "m");
-
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                Date time = new Date(System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime() - 3600000);
-                System.out.println(System.currentTimeMillis());
-                System.out.println(MainActivity.getGameManager().getCurrentGame().getStartTime());
-                System.out.println(dateFormat.format(time));
-                TextView timePlayed = (TextView)getActivity().findViewById(R.id.time_played);
-                timePlayed.setText("Time Played: "+ dateFormat.format(time) +"s");
-            }
-        });
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -122,6 +72,55 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         return windowFrame;
     }
 
+    @Override
+    public void onMapReady(GoogleMap map) {
+        gameMap = map;
+        gameMap.setMyLocationEnabled(true);
+        gameMap.getUiSettings().setScrollGesturesEnabled(false);
+        gameMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                gameMap.getUiSettings().setZoomGesturesEnabled(false);
+            }
+        });
+
+        gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                currentLocation = location;
+                Bitmap bgBitmap = createBgHeatBitmap(getHeatHex());
+                Bitmap clipperBitmap = createClipperHeatBitmap(getHeatHex(), 600, 600);
+                background = new BitmapDrawable(getResources(), bgBitmap);
+                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
+
+                myView.findViewById(R.id.in_game_container).setBackground(background);
+                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
+
+                if (gameMap.getCameraPosition().zoom == 15F) {
+                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                } else if (!mapLoading) {
+                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
+                    mapLoading = true;
+                }
+
+                TextView distanceTravelled = (TextView) getActivity().findViewById(R.id.distance_travelled);
+                distanceTravelled.setText("Distance Travelled: " + MainActivity.getGameManager().getCurrentGame().getTravelDistance() + "m");
+
+                Long time = (System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime());
+
+                String outputTime = String.format("%02d min, %02d sec",
+                        TimeUnit.MILLISECONDS.toMinutes(time),
+                        TimeUnit.MILLISECONDS.toSeconds(time) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
+                );
+
+                TextView timePlayed = (TextView) getActivity().findViewById(R.id.time_played);
+                timePlayed.setText("Time Played: " + outputTime + "s");
+            }
+        });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,8 +135,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         fragmentTransaction.add(R.id.google_map_container, myMapFragment);
         fragmentTransaction.commit();
         myMapFragment.getMapAsync(this);
-
-
 
         return myView;
     }
@@ -165,9 +162,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             // Replace whatever is in the fragment_container view with this fragment,
             transaction.replace(R.id.FragmentContainer, newFragment);
         }
-
-        // and add the transaction to the back stack
-        //transaction.addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();

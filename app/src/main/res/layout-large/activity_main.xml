@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context="com.mad.team1.hotorcold.MainActivity"
-    android:id="@+id/myCoordinatorLayout">
+    android:id="@+id/myMainLayout">
 
 
     <LinearLayout
@@ -22,4 +22,4 @@
         android:background="?android:attr/detailsElementBackground" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
