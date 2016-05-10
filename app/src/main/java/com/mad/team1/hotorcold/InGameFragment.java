@@ -2,6 +2,8 @@ package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +47,8 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
     }
+
+
     private static Bitmap createBgHeatBitmap(String color) {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(Color.parseColor(color));
@@ -137,6 +142,27 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         myMapFragment.getMapAsync(this);
 
         return myView;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!");
+
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
+
+
+
     }
 
     public String getHeatHex(){
