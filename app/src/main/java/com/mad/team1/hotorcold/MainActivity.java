@@ -126,16 +126,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     @Override
     public void onProviderDisabled(String provider) {
     // If GPS is OFF send User to Location Settings Page
-        Snackbar gpsOffSnackBar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.gps_off, Snackbar.LENGTH_INDEFINITE);
-        gpsOffSnackBar.setAction(R.string.goToLocationSettings, new goToSettingsListener());
-        gpsOffSnackBar.show();
 
+        Snackbar snakbar = Snackbar.make(findViewById(R.id.myMainLayout), R.string.gps_off, Snackbar.LENGTH_INDEFINITE);
+        snakbar.setAction(R.string.goToLocationSettings, new goToSettingsListener());
+        snakbar.show();
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Snackbar gpsOnSnackBar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.gps_on, Snackbar.LENGTH_SHORT);
-        gpsOnSnackBar.show();
+        Snackbar.make(findViewById(R.id.myMainLayout), R.string.gps_on, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

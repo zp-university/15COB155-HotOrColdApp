@@ -16,22 +16,22 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
 
@@ -42,6 +42,43 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     private GoogleMap gameMap;
     private boolean mapLoading = false;
     private Location currentLocation;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+    }
+
+
+    private static Bitmap createBgHeatBitmap(String color) {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(Color.parseColor(color));
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 200, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawRect(new RectF(0, 0, 100, 200), p);
+
+        return bitmap;
+    }
+    private static Bitmap createClipperHeatBitmap(String color, int height, int width) {
+        Bitmap windowFrame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(windowFrame);
+
+        RectF outerRectangle = new RectF(0, 0, width, height);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(Color.parseColor(color));
+        canvas.drawRect(outerRectangle, p);
+
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT)); // A out B http://en.wikipedia.org/wiki/File:Alpha_compositing.svg
+        float centerX = width / 2;
+        float centerY = height / 2;
+        float radius = Math.min(width, height) / 2 - 50;
+        canvas.drawCircle(centerX, centerY, radius, p);
+
+        return windowFrame;
+    }
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -56,9 +93,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             }
         });
 
+
         gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
-            public void onMyLocationChange(Location location){
+            public void onMyLocationChange(Location location) {
                 currentLocation = location;
                 Bitmap bgBitmap = createBgHeatBitmap(getHeatHex());
                 Bitmap clipperBitmap = createClipperHeatBitmap(getHeatHex(), 600, 600);
@@ -68,24 +106,26 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 myView.findViewById(R.id.in_game_container).setBackground(background);
                 myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
 
-                if(gameMap.getCameraPosition().zoom == 15F){
+                if (gameMap.getCameraPosition().zoom == 15F) {
                     gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
-                }
-                else if(!mapLoading){
+                } else if (!mapLoading) {
                     gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
                     mapLoading = true;
                 }
 
-                TextView distanceTravelled = (TextView)getActivity().findViewById(R.id.distance_travelled);
+                TextView distanceTravelled = (TextView) getActivity().findViewById(R.id.distance_travelled);
                 distanceTravelled.setText("Distance Travelled: " + MainActivity.getGameManager().getCurrentGame().getTravelDistance() + "m");
 
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                Date time = new Date(System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime() - 3600000);
-                System.out.println(System.currentTimeMillis());
-                System.out.println(MainActivity.getGameManager().getCurrentGame().getStartTime());
-                System.out.println(dateFormat.format(time));
-                TextView timePlayed = (TextView)getActivity().findViewById(R.id.time_played);
-                timePlayed.setText("Time Played: "+ dateFormat.format(time) +"s");
+                Long time = (System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime());
+
+                String outputTime = String.format("%02d min, %02d sec",
+                        TimeUnit.MILLISECONDS.toMinutes(time),
+                        TimeUnit.MILLISECONDS.toSeconds(time) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
+                );
+
+                TextView timePlayed = (TextView) getActivity().findViewById(R.id.time_played);
+                timePlayed.setText("Time Played: " + outputTime + "s");
             }
         });
     }
@@ -147,6 +187,28 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    Snackbar.make(v, "Please end the game to get back to the menu", Snackbar.LENGTH_SHORT).show();
+                    // handle back button's click listener
+                    return true;
+                }
+                return false;
+            }
+
+
+        });
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
 
@@ -161,10 +223,12 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 
-
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        gameMap.setOnMyLocationChangeListener(null);
     }
 
     public String getHeatHex(){
@@ -190,9 +254,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             // Replace whatever is in the fragment_container view with this fragment,
             transaction.replace(R.id.FragmentContainer, newFragment);
         }
-
-        // and add the transaction to the back stack
-        //transaction.addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();
