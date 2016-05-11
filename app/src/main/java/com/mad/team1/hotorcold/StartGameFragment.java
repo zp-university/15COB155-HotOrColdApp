@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -92,6 +93,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         // switch statement send to the correct fragment
         switch (v.getId()) {
             case R.id.startGameButton: {
+                Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 500 milliseconds
+                vibrator.vibrate(500);
                 if(MainActivity.getLocation() != null){
                     newFragment= new InGameFragment();
                     DistanceUnit distanceUnit;

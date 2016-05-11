@@ -3,7 +3,6 @@ package com.mad.team1.hotorcold;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
-import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
@@ -30,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -215,10 +212,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void onStart(){
         super.onStart();
 
-        Vibrator v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(500);
-
         // build notification
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -275,6 +268,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
     @Override
     public void onDestroy(){
+        super.onDestroy();
         destroyInGameNotification();
     }
 
