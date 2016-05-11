@@ -176,20 +176,11 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void onStart(){
         super.onStart();
 
-      //Fragment newFragment= new GameCompleteFragment();
-       // MainActivity.getGameManager().endCurrentGame(currentLocation);
-
-// use System.currentTimeMillis() to have a unique ID for the pending intent
-      //  PendingIntent pIntent = PendingIntent.getActivity(getActivity(), (int) System.currentTimeMillis(), intent, 0);
-
 // build notification
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("HotOrCold")
                 .setContentText("Game in Progress");
-
-        //Intent intent = new Intent(this, InGameFragment.class);
 
         // Sets an ID for the notification
         int mNotificationId = 001;
