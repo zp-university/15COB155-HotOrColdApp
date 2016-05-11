@@ -146,23 +146,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
     };
 
-    private BroadcastReceiver batteryLowReceiver = new BroadcastReceiver() {
-        @Override
-        //When Event is published, onReceive method is called
-        public void onReceive(Context c, Intent i) {
-
-            Snackbar snakbar = Snackbar.make(getActivity().findViewById(R.id.myMainLayout), R.string.low_battery_message, Snackbar.LENGTH_INDEFINITE);
-            snakbar.show();
-            //Get Battery %
-           // int level = i.getIntExtra("level", 0);
-            //Find textview control created in main.xml
-            //TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
-            //Set TextView with text
-           // tv.setText("Battery Level: " + Integer.toString(level) + "%");
-        }
-
-    };
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,7 +170,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         super.onResume();
         // register receiver on receiving battery change intent and battery low
         getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        getActivity().registerReceiver(batteryLowReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
         // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
         getView().setFocusableInTouchMode(true);

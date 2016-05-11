@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -58,8 +59,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         super.onResume();
         getPermissionToReadLocation();
         createLocationManager();
+
+        registerReceiver(batteryLowReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
     }
 
+    private BroadcastReceiver batteryLowReceiver = new BroadcastReceiver() {
+        @Override
+        //When Event is published, onReceive method is called
+        public void onReceive(Context c, Intent i) {
+
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.myMainLayout), R.string.low_battery_message, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
+            //Get Battery %
+            // int level = i.getIntExtra("level", 0);
+            //Find textview control created in main.xml
+            //TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
+            //Set TextView with text
+            // tv.setText("Battery Level: " + Integer.toString(level) + "%");
+        }
+
+    };
     public void getPermissionToReadLocation() {
 
         // Check for Fine Location permission
