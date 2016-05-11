@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
@@ -53,6 +54,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+
     }
 
     @Override
@@ -140,10 +142,26 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         public void onReceive(Context c, Intent i) {
             //Get Battery %
             int level = i.getIntExtra("level", 0);
-            //Find textview control created in main.xml
             TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
             //Set TextView with text
             tv.setText("Battery Level: " + Integer.toString(level) + "%");
+        }
+
+    };
+
+    private BroadcastReceiver batteryLowReceiver = new BroadcastReceiver() {
+        @Override
+        //When Event is published, onReceive method is called
+        public void onReceive(Context c, Intent i) {
+
+            Snackbar snakbar = Snackbar.make(getActivity().findViewById(R.id.myMainLayout), R.string.low_battery_message, Snackbar.LENGTH_INDEFINITE);
+            snakbar.show();
+            //Get Battery %
+           // int level = i.getIntExtra("level", 0);
+            //Find textview control created in main.xml
+            //TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
+            //Set TextView with text
+           // tv.setText("Battery Level: " + Integer.toString(level) + "%");
         }
 
     };
@@ -170,8 +188,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onResume() {
         super.onResume();
-
+        // register receiver on receiving battery change intent and battery low
         getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        getActivity().registerReceiver(batteryLowReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
+
         // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -195,7 +215,11 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void onStart(){
         super.onStart();
 
-// build notification
+        Vibrator v = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        v.vibrate(500);
+
+        // build notification
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("HotOrCold")
@@ -226,8 +250,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             case R.id.gamecomplete_button:
                 newFragment= new GameCompleteFragment();
                 MainActivity.getGameManager().endCurrentGame(currentLocation);
-                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(001);
+                destroyInGameNotification();
                 break;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -243,6 +266,16 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    public void destroyInGameNotification(){
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(001);
+    }
+
+    @Override
+    public void onDestroy(){
+        destroyInGameNotification();
     }
 
 }
