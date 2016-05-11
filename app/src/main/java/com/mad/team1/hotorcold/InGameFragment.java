@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -132,6 +134,20 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         return windowFrame;
     }
 
+    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+        @Override
+        //When Event is published, onReceive method is called
+        public void onReceive(Context c, Intent i) {
+            //Get Battery %
+            int level = i.getIntExtra("level", 0);
+            //Find textview control created in main.xml
+            TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
+            //Set TextView with text
+            tv.setText("Battery Level: " + Integer.toString(level) + "%");
+        }
+
+    };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -147,12 +163,15 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         fragmentTransaction.commit();
         myMapFragment.getMapAsync(this);
 
+
         return myView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
