@@ -3,7 +3,9 @@ package com.mad.team1.hotorcold;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -49,35 +51,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
-    }
-
-
-    private static Bitmap createBgHeatBitmap(String color) {
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(Color.parseColor(color));
-
-        Bitmap bitmap = Bitmap.createBitmap(100, 200, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawRect(new RectF(0, 0, 100, 200), p);
-
-        return bitmap;
-    }
-    private static Bitmap createClipperHeatBitmap(String color, int height, int width) {
-        Bitmap windowFrame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(windowFrame);
-
-        RectF outerRectangle = new RectF(0, 0, width, height);
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(Color.parseColor(color));
-        canvas.drawRect(outerRectangle, p);
-
-        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT)); // A out B http://en.wikipedia.org/wiki/File:Alpha_compositing.svg
-        float centerX = width / 2;
-        float centerY = height / 2;
-        float radius = Math.min(width, height) / 2 - 50;
-        canvas.drawCircle(centerX, centerY, radius, p);
-
-        return windowFrame;
     }
 
     @Override
@@ -128,15 +101,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 timePlayed.setText("Time Played: " + outputTime + "s");
             }
         });
-    }
-
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        // Check to see if we have a sideContent in which to embed a fragment directly
-        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
-        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
     }
 
 
@@ -212,10 +176,20 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void onStart(){
         super.onStart();
 
+      //Fragment newFragment= new GameCompleteFragment();
+       // MainActivity.getGameManager().endCurrentGame(currentLocation);
+
+// use System.currentTimeMillis() to have a unique ID for the pending intent
+      //  PendingIntent pIntent = PendingIntent.getActivity(getActivity(), (int) System.currentTimeMillis(), intent, 0);
+
+// build notification
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("HotOrCold")
                 .setContentText("Game in Progress");
+
+        //Intent intent = new Intent(this, InGameFragment.class);
 
         // Sets an ID for the notification
         int mNotificationId = 001;
@@ -242,6 +216,8 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             case R.id.gamecomplete_button:
                 newFragment= new GameCompleteFragment();
                 MainActivity.getGameManager().endCurrentGame(currentLocation);
+                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(001);
                 break;
         }
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
