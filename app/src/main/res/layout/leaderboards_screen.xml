@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,9 +12,23 @@
         android:layout_gravity="center_horizontal" />
 
     <ListView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="188dp"
+        android:id="@+id/leaderboard_listview" />
+
+    <EditText
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/leaderboard_listview"
-        ></ListView>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="500"
+        android:id="@+id/test_text"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickAddName"
+        android:text="Add Name" />
+
 
 </LinearLayout>

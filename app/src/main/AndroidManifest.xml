@@ -41,6 +41,13 @@
             android:name=".SettingsFragment"
             android:label="@string/title_activity_settings"></activity>
 
+        <provider
+            android:name="com.mad.team1.hotorcold.data.MyScoreProvider"
+            android:authorities="com.mad.team1.hotorcold"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCPldu8pmf5Tn3DuXrtsUhL5fANn7IWSFc"/>
