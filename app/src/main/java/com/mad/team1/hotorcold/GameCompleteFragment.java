@@ -31,6 +31,21 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+
+        Button home_Button = (Button) getActivity().findViewById(R.id.go_home_button);
+
+        if (mDualPane){
+            home_Button.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         KeyValueView scoreView = (KeyValueView) view.findViewById(R.id.score_view);
@@ -84,24 +99,33 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
         fm.popBackStack(gameFragment, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    @Override
     public void onClick(View v){
         Fragment newFragment = null;
         // switch statement send to the correct fragment
-        switch (v.getId()) {
-            case R.id.leaderboards_button:
-                newFragment= new LeaderboardsFragment();
-                break;
-            case R.id.go_home_button:
-                newFragment= new HomeScreenFragment();
-                break;
-        }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mDualPane) {
+            switch (v.getId()) {
+                case R.id.leaderboards_button:
+                    newFragment= new LeaderboardsFragment();
+                    transaction.replace(R.id.sideContent, newFragment);
+                    break;
+                case R.id.go_home_button:
+                    transaction.detach(this);
+                    break;
+            }
             // In dual-pane mode, show fragment in sideContent
-            transaction.replace(R.id.sideContent, newFragment);
         }
         else{
+            switch (v.getId()) {
+                case R.id.leaderboards_button:
+                    newFragment= new LeaderboardsFragment();
+                    break;
+                case R.id.go_home_button:
+                    newFragment= new HomeScreenFragment();
+                    break;
+            }
             // Replace whatever is in the fragment_container view with this fragment,
             transaction.replace(R.id.FragmentContainer, newFragment);
         }

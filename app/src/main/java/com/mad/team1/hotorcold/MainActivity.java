@@ -1,7 +1,6 @@
 package com.mad.team1.hotorcold;
 
 import android.Manifest;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,19 +9,17 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mad.team1.hotorcold.api.Game;
 import com.mad.team1.hotorcold.api.GameManager;
 
 
@@ -31,6 +28,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     private LocationManager locationManager;
     private static final GameManager gameManager = GameManager.createGameManager();
     private static final int  READ_LOCATION_PERMISSIONS_REQUEST = 1;
+    private static Vibrator vibrator;
+
+    public static Vibrator getVibrator() {
+        return vibrator;
+    }
 
 
     @Override
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
         }
 
+        if(vibrator == null) vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 //Check permission to read location onResume so if user navigates away from app then back in still checks location permission
