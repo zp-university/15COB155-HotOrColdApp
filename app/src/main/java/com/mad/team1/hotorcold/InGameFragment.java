@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +18,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.mad.team1.hotorcold.data.ScoreDataModel;
+
 import java.util.concurrent.TimeUnit;
 
 public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
@@ -44,6 +48,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     private GoogleMap gameMap;
     private boolean mapLoading = false;
     private Location currentLocation;
+    Integer gameScore;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -141,7 +146,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             int level = i.getIntExtra("level", 0);
             TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
             //Set TextView with text
-            tv.setText("Battery Level: " + Integer.toString(level) + "%");
+            if (tv != null) tv.setText("Battery Level: " + Integer.toString(level) + "%");
+
+
         }
 
     };
@@ -218,12 +225,23 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 
+    public void saveGameData(){
+        Integer gameScore = MainActivity.getGameManager().getCurrentGame().calculateScore();
+        String gameScoreString = gameScore.toString();
+        ContentValues values = new ContentValues();
+        values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME, System.currentTimeMillis());
+        values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE, gameScoreString);
+        Uri uri = getActivity().getContentResolver().insert(ScoreDataModel.scoreEntry.CONTENT_URI, values);
+        Toast.makeText(getActivity().getBaseContext(), "New record inserted", Toast.LENGTH_LONG).show();
+    }
+
     public void onClick(View v) {
         Fragment newFragment = null;
         // switch statement send to the correct fragment
         switch (v.getId()) {
             case R.id.gamecomplete_button:
                 newFragment= new GameCompleteFragment();
+                saveGameData();
                 MainActivity.getGameManager().endCurrentGame(currentLocation);
                 destroyInGameNotification();
                 break;
@@ -247,6 +265,8 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(001);
     }
+
+
 
     @Override
     public void onDestroy(){

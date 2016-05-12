@@ -99,8 +99,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME, inputText);
         values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE, inputText2);
         Uri uri = getActivity().getContentResolver().insert(ScoreDataModel.scoreEntry.CONTENT_URI, values);
-        Toast.makeText(getActivity().getBaseContext(), "New record inserted", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(getActivity().getBaseContext(), "New record inserted", Toast.LENGTH_LONG).show();
     }
 
 
