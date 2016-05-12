@@ -34,14 +34,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         return vibrator;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         if (savedInstanceState == null) {
             // The Activity is NOT being re-created so we can instantiate a new Fragment
             // and add it to the Activity
@@ -170,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(batteryLowReceiver);
     }
 
     @Override

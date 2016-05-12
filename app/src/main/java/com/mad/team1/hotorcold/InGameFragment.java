@@ -148,8 +148,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
             //Set TextView with text
             if (tv != null) tv.setText("Battery Level: " + Integer.toString(level) + "%");
-
-
         }
 
     };
@@ -178,7 +176,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         super.onResume();
         // register receiver on receiving battery change intent and battery low
         getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
         // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -260,6 +257,12 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void destroyInGameNotification(){
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(001);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mBatInfoReceiver);
     }
 
     @Override
