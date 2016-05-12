@@ -77,8 +77,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             @Override
             public void onMyLocationChange(Location location) {
                 currentLocation = location;
-                Bitmap bgBitmap = createBgHeatBitmap(getHeatHex());
-                Bitmap clipperBitmap = createClipperHeatBitmap(getHeatHex(), 600, 600);
+                String colorHash = MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(location);
+                Bitmap bgBitmap = createBgHeatBitmap(colorHash);
+                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, 600, 600);
                 background = new BitmapDrawable(getResources(), bgBitmap);
                 mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
 
@@ -219,10 +220,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     public void onStop() {
         super.onStop();
         gameMap.setOnMyLocationChangeListener(null);
-    }
-
-    public String getHeatHex(){
-        return MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(currentLocation);
     }
 
     public void saveGameData(){

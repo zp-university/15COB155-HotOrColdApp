@@ -133,13 +133,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        String msg = "New Latitude: " + location.getLatitude() + " New Longitude: " + location.getLongitude();
+        //String msg = "New Latitude: " + location.getLatitude() + " New Longitude: " + location.getLongitude();
         //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
         currentLocation = location;
-
-        Intent locationChangedIntent = new Intent("HotOrColdLocationChanged");
-        this.sendBroadcast(locationChangedIntent);
-
     }
 
     @Override
