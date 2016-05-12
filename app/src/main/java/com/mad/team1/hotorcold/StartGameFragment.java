@@ -2,18 +2,11 @@ package com.mad.team1.hotorcold;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mad.team1.hotorcold.api.DistanceUnit;
 
@@ -34,7 +26,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     private TextView textView;
     private boolean mDualPane;
     private String unitTypePreference;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,47 +77,58 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         });
     }
 
+    public static Fragment goToGame(View v, String unitTypePreference, int maxDistance) {
+
+        Fragment newFragment = null;
+        if (MainActivity.getLocation() != null) {
+            newFragment = new InGameFragment();
+            DistanceUnit distanceUnit;
+            switch (unitTypePreference) {
+                case "Metric":
+                    distanceUnit = DistanceUnit.KILOMETERS;
+                    break;
+                case "Imperial":
+                    distanceUnit = DistanceUnit.MILES;
+                    break;
+                default:
+                    distanceUnit = DistanceUnit.NAUTICAL_MILES;
+                    break;
+            }
+            MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), maxDistance, DistanceUnit.METERS);
+        } else {
+            // Vibrate for 500 milliseconds
+            MainActivity.getVibrator().vibrate(500);
+            Snackbar.make(v, "Oops! Still searching for GPS signal", Snackbar.LENGTH_SHORT).show();
+        }
+
+        return newFragment;
+    }
+
     @Override
     public void onClick(View v) {
-        Fragment newFragment = null;
-        boolean validClick = true;
-        // switch statement send to the correct fragment
-        switch (v.getId()) {
-            case R.id.startGameButton: {
-                Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-                // Vibrate for 500 milliseconds
-                vibrator.vibrate(500);
-                if(MainActivity.getLocation() != null){
-                    newFragment= new InGameFragment();
-                    DistanceUnit distanceUnit;
-                    switch (unitTypePreference){
-                        case "Metric": distanceUnit = DistanceUnit.KILOMETERS; break;
-                        case "Imperial": distanceUnit = DistanceUnit.MILES; break;
-                        default: distanceUnit = DistanceUnit.NAUTICAL_MILES; break;
-                    }
-                    MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), seekBar.getProgress()/2, distanceUnit);
-                } else{
-                    validClick = false;
 
-                    Snackbar.make(v, "Oops! Still searching for GPS signal", Snackbar.LENGTH_SHORT).show();
+        switch (v.getId()) {
+
+            case R.id.startGameButton: {
+
+                Fragment newFragment = goToGame(v, unitTypePreference, seekBar.getProgress() / 2);
+
+                if (MainActivity.getLocation() != null) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    if (mDualPane) {
+                        // In dual-pane mode, show fragment in sideContent
+                        transaction.replace(R.id.sideContent, newFragment);
+                    } else {
+                        // Replace whatever is in the fragment_container view with this fragment,
+                        transaction.replace(R.id.FragmentContainer, newFragment);
+                    }
+                    // and add the transaction to the back stack
+                    transaction.addToBackStack(null);
+                    // Commit the transaction
+                    transaction.commit();
+                    break;
                 }
-                break;
             }
-        }
-        if(validClick){
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            if (mDualPane) {
-                // In dual-pane mode, show fragment in sideContent
-                transaction.replace(R.id.sideContent, newFragment);
-            }
-            else{
-                // Replace whatever is in the fragment_container view with this fragment,
-                transaction.replace(R.id.FragmentContainer, newFragment);
-            }
-            // and add the transaction to the back stack
-            transaction.addToBackStack(null);
-            // Commit the transaction
-            transaction.commit();
         }
     }
 
