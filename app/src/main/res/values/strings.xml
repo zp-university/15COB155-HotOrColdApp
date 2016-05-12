@@ -4,7 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="welcome_message">Welcome to the "Hot Or Cold" App</string>
     <string name="leaderboards_text">Leaderboards</string>
-    <string name="instructions_text">Instructions</string>
+    <string name="touch_gesture_instructions">Double tap the screen to start a random game</string>
     <string name="title_activity_games_list">Game List</string>
 
     <string name="low_battery_message">Battery is Low, consider closing the app</string>

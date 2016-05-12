@@ -19,36 +19,60 @@
         android:layout_marginTop="20dp"
         android:textAlignment="center" />
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|top"
+    android:orientation="vertical">
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:text="@string/start_game_title"
         android:id="@+id/start_button"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_gravity="center"
         android:layout_alignBaseline="@+id/instruction_button"
         android:layout_alignBottom="@+id/instruction_button"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         style="@style/Base.Widget.AppCompat.Button.Colored" />
+    </LinearLayout>
 
-    <Button
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/instructions_text"
-        android:id="@+id/instruction_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        style="@style/Base.Widget.AppCompat.Button.Colored" />
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="@string/leaderboards_text"
+            android:id="@+id/leaderboards_button"
+            android:layout_below="@+id/start_button"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="15dp"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
-    <Button
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/leaderboards_text"
-        android:id="@+id/leaderboards_button"
-        android:layout_below="@+id/start_button"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        style="@style/Base.Widget.AppCompat.Button.Colored" />
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/touch_gesture_instructions"
+            android:id="@+id/touchGestureInstructions"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+
+
+
+
 
 </LinearLayout>

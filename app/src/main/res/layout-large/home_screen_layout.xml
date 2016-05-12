@@ -47,10 +47,10 @@
         android:gravity="center_horizontal">
 
         <Button
-            android:layout_height="wrap_content"
-            android:text="@string/instructions_text"
-            android:id="@+id/instruction_button"
-            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/leaderboards_text"
+            android:id="@+id/leaderboards_button"
+            android:layout_width="wrap_content"
             android:layout_column="0"
             style="@style/Base.Widget.AppCompat.Button.Colored" />
     </TableRow>
@@ -60,13 +60,15 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal">
 
-        <Button
-            android:layout_height="fill_parent"
-            android:text="@string/leaderboards_text"
-            android:id="@+id/leaderboards_button"
-            android:layout_width="wrap_content"
-            android:layout_column="0"
-            style="@style/Base.Widget.AppCompat.Button.Colored" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/touch_gesture_instructions"
+            android:id="@+id/touchGestureInstructions"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:textAlignment="center" />
     </TableRow>
 
 </TableLayout>
