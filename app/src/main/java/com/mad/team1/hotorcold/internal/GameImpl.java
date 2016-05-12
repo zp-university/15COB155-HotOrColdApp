@@ -1,6 +1,5 @@
 package com.mad.team1.hotorcold.internal;
 
-import android.graphics.Color;
 import android.location.Location;
 
 import com.mad.team1.hotorcold.api.DistanceUnit;
@@ -191,7 +190,11 @@ public class GameImpl implements Game {
             return 0;
         }
 
-        int points = (int) (0.1 * ((currentDistance - 50) + Math.pow((0.01 * currentDistance), 2)));
+        /**
+         * Original: 0.1 * ((x - 50) + (0.02 * x)^2)
+         * For Demo: 10  * ((x - 50) + (0.02 * x)^2)
+         */
+        int points = (int) (10 * ((currentDistance - 50) + Math.pow((0.02 * currentDistance), 2)));
 
         double percentageDistance = calculatePercentageDistance(simpleLocation, originalDistance);
 
