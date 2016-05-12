@@ -32,6 +32,9 @@
     <!-- Strings related to In Game screen -->
     <string name="game_complete_button">End Game</string>
 
+    <!-- Strings related to Leaderboards screen -->
+    <string name="points">" Points"</string>
+
     <!-- Strings related to Settings -->
     <string name="pref_units_title">Game List</string>
     <string-array name="pref_units_entries">

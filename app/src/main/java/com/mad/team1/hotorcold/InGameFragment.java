@@ -232,7 +232,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME, System.currentTimeMillis());
         values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE, gameScoreString);
         Uri uri = getActivity().getContentResolver().insert(ScoreDataModel.scoreEntry.CONTENT_URI, values);
-        Toast.makeText(getActivity().getBaseContext(), "New record inserted", Toast.LENGTH_LONG).show();
     }
 
     public void onClick(View v) {

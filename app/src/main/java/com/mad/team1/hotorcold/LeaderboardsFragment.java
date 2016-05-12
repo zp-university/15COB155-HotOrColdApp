@@ -28,7 +28,7 @@ import org.w3c.dom.Comment;
 /**
  * Created by GurinderSingh on 27/04/2016.
  */
-public class LeaderboardsFragment extends Fragment implements View.OnClickListener{
+public class LeaderboardsFragment extends Fragment{
 
     private ListView listView;
     private SimpleCursorAdapter adapter;
@@ -39,25 +39,9 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         View view = inflater.inflate(R.layout.leaderboards_screen, container, false);
 
-        Button name_Button = (Button) view.findViewById(R.id.btnAdd);
-
-        name_Button.setOnClickListener(this);
-
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-
-        // switch statement send to the correct fragment
-        switch (v.getId()) {
-            case R.id.btnAdd:
-                onClickAddName(v);
-                break;
-
-        }
-
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -67,7 +51,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         String[] mProjection = {
                 ScoreDataModel.scoreEntry._ID,
-                ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME,
                 ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE
         };
 
@@ -81,8 +64,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         adapter = new SimpleCursorAdapter(getActivity().getBaseContext(),
                 R.layout.list_layout,
                 mCursor,
-                new String[] { ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE, ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME},
-                new int[] { R.id.scoreTotal , R.id.scoreTime},
+                new String[] { ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE},
+                new int[] { R.id.scoreTotal},
                 0
         );
 
@@ -90,18 +73,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
 
     }
-
-    public void onClickAddName(View view) {
-        ContentValues values = new ContentValues();
-        EditText myTextView = (EditText) getActivity().findViewById(R.id.test_text);
-        String inputText = myTextView.getText().toString();
-        String inputText2 = "504";
-        values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_TIME, inputText);
-        values.put(ScoreDataModel.scoreEntry.COLUMN_SCORE_VALUE, inputText2);
-        Uri uri = getActivity().getContentResolver().insert(ScoreDataModel.scoreEntry.CONTENT_URI, values);
-        Toast.makeText(getActivity().getBaseContext(), "New record inserted", Toast.LENGTH_LONG).show();
-    }
-
 
 
 }

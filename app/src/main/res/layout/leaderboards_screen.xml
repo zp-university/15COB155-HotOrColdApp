@@ -7,28 +7,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Leaderboards"
+        android:text="Leaderboard"
         android:id="@+id/leaderboards_text"
         android:layout_gravity="center_horizontal" />
 
     <ListView
         android:layout_width="fill_parent"
-        android:layout_height="188dp"
+        android:layout_height="fill_parent"
         android:id="@+id/leaderboard_listview" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="500"
-        android:id="@+id/test_text"
-        android:layout_gravity="center_horizontal" />
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickAddName"
-        android:text="Add Name" />
-
 
 </LinearLayout>
