@@ -6,10 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="@dimen/game_vertical_margin"
-        android:paddingLeft="@dimen/game_horizontal_margin"
-        android:paddingRight="@dimen/game_horizontal_margin"
-        android:paddingTop="@dimen/game_vertical_margin"
         android:background="@color/startBlue">
 
         <FrameLayout
@@ -17,6 +13,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:orientation="vertical"/>
 
         <FrameLayout
@@ -24,6 +21,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:orientation="vertical"/>
 
         <LinearLayout

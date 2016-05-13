@@ -12,61 +12,61 @@
         android:paddingTop="@dimen/game_vertical_margin"
         android:background="@color/startBlue">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/google_map_container"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"/>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/clipping_view"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/distance_travelled"
+            android:layout_gravity="top|center"
+            android:padding="10dp"
+            android:paddingTop="40dp"
+            android:textColor="#fff"
+            android:gravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/time_played"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:paddingTop="80dp"
+            android:textColor="#fff" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/battery_percentage"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:paddingTop="120dp"
+            android:textColor="#fff"/>
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="bottom">
+            android:text="@string/game_complete_button"
+            android:id="@+id/gamecomplete_button"
+            android:layout_marginBottom="20dp"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_gravity="center_horizontal|bottom" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/distance_travelled"
-                android:layout_gravity="top|center"
-                android:padding="10dp"
-                android:paddingTop="40dp"
-                android:textColor="#fff"
-                android:gravity="center_vertical|center_horizontal" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/time_played"
-                android:gravity="center_vertical|center_horizontal"
-                android:padding="10dp"
-                android:paddingTop="80dp"
-                android:textColor="#fff" />
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/battery_percentage"
-                android:gravity="center_vertical|center_horizontal"
-                android:padding="10dp"
-                android:paddingTop="120dp"
-                android:textColor="#fff"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/game_complete_button"
-                android:id="@+id/gamecomplete_button"
-                android:layout_marginBottom="20dp"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:layout_gravity="center_horizontal|bottom" />
-        </LinearLayout>
-
-    </FrameLayout>
+</FrameLayout>

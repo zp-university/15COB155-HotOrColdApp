@@ -57,8 +57,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
 
         if( savedInstanceState != null ) {
             showSeekbarDistance(savedInstanceState.getInt("seekBarProgress"));
-        }
-        else {
+        } else {
             showSeekbarDistance(seekBar.getProgress());
         }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -66,11 +65,9 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 showSeekbarDistance(progressValue);
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }

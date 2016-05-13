@@ -59,6 +59,8 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     private String colorHash = "#44b6ff";
     private static boolean mapZoomed = false;
     private boolean mapMoved = false;
+    private int clipperWidthHeight;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
@@ -117,6 +119,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 );
                 TextView timePlayed = (TextView) getActivity().findViewById(R.id.time_played);
                 timePlayed.setText("Time Played: " + outputTime + "s");
+
+                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, clipperWidthHeight, clipperWidthHeight);
+                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
+                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
             }
         });
     }
@@ -208,8 +214,9 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
         final FrameLayout mapContainer = (FrameLayout) myView.findViewById(R.id.google_map_container);
         final FrameLayout clippingView = (FrameLayout) myView.findViewById(R.id.clipping_view);
-        ViewTreeObserver vto = mapContainer.getViewTreeObserver();
+        final ViewTreeObserver vto = mapContainer.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
             @Override
             public void onGlobalLayout() {
                 final int mapWidth = mapContainer.getWidth();
@@ -220,23 +227,31 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 } else {
                     mapWidthHeight = mapHeight;
                 }
-                FrameLayout.LayoutParams mapLayoutParams = new FrameLayout.LayoutParams(mapWidthHeight, mapWidthHeight);
+                System.out.println("width:"+mapWidth);
+                System.out.println("height:"+mapHeight);
+                System.out.println("implemented:"+mapWidthHeight);
+                FrameLayout.LayoutParams mapLayoutParams = new FrameLayout.LayoutParams(mapWidthHeight, mapWidthHeight, 1);
                 mapContainer.setLayoutParams(mapLayoutParams);
 
                 final int clipperWidth = mapContainer.getWidth();
                 final int clipperHeight = mapContainer.getHeight();
-                int clipperWidthHeight;
                 if (clipperWidth < clipperHeight) {
                     clipperWidthHeight = clipperWidth;
                 } else {
                     clipperWidthHeight = clipperHeight;
                 }
-                FrameLayout.LayoutParams clipperLayoutParams = new FrameLayout.LayoutParams(clipperWidthHeight, clipperWidthHeight);
+                System.out.println("width:"+clipperWidth);
+                System.out.println("height:"+clipperHeight);
+                System.out.println("implemented:" + clipperWidthHeight);
+
+                FrameLayout.LayoutParams clipperLayoutParams = new FrameLayout.LayoutParams(clipperWidthHeight, clipperWidthHeight, 1);
                 clippingView.setLayoutParams(clipperLayoutParams);
 
                 Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, clipperWidthHeight, clipperWidthHeight);
                 mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
                 myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
+
+                mapContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
