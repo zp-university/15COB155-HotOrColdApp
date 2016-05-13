@@ -62,7 +62,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             currentLocation.setLatitude(savedInstanceState.getDouble("currentLat"));
             currentLocation.setLongitude(savedInstanceState.getDouble("currentLong"));
         }
-
     }
 
     @Override
@@ -82,7 +81,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         return myView;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -100,9 +98,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
-
-
-
 
     @Override
     public void onResume() {
@@ -126,7 +121,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
             }
 
         });
-
 
         final FrameLayout mapContainer = (FrameLayout) myView.findViewById(R.id.google_map_container);
         final FrameLayout clippingView = (FrameLayout) myView.findViewById(R.id.clipping_view);
@@ -202,7 +196,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         }
     }
 
-
     @Override
     public void onMapReady(GoogleMap map) {
         gameMap = map;
@@ -256,7 +249,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         });
     }
 
-
     private static Bitmap createBgHeatBitmap(String color) {
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(Color.parseColor(color));
@@ -267,6 +259,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
 
         return bitmap;
     }
+
     private static Bitmap createClipperHeatBitmap(String color, int height, int width) {
         Bitmap windowFrame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(windowFrame);
@@ -297,7 +290,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         }
 
     };
-
 
     public void saveGameData(){
         Integer gameScore = MainActivity.getGameManager().getCurrentGame().calculateScore();
@@ -339,7 +331,4 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(001);
     }
-
-
 }
-
