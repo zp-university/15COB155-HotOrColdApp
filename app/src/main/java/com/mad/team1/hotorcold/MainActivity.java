@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.os.IBinder;
@@ -23,8 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.mad.team1.hotorcold.api.GameManager;
@@ -77,11 +73,26 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(batteryLowReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(batteryLowReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();  // Always call the superclass
+        instance = null;
+        // Stop method tracing that the activity started during onCreate()
+        android.os.Debug.stopMethodTracing();
+    }
+
+
     private BroadcastReceiver batteryLowReceiver = new BroadcastReceiver() {
         @Override
         //When Event is published, onReceive method is called
         public void onReceive(Context c, Intent i) {
-
+            // Show Low Battery Snackbar
             Snackbar snackbar = Snackbar.make(findViewById(R.id.myMainLayout), R.string.low_battery_message, Snackbar.LENGTH_INDEFINITE);
             snackbar.show();
 
@@ -120,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
+// Gets current location from getLocationService
     public static Location getLocation(){
         return instance.getLocationService().getCurrentLocation();
     }
@@ -134,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Get GameManager
     public static GameManager getGameManager() {
         return gameManager;
     }
@@ -142,15 +154,7 @@ public class MainActivity extends AppCompatActivity {
         return instance;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();  // Always call the superclass
-
-        instance = null;
-        // Stop method tracing that the activity started during onCreate()
-        android.os.Debug.stopMethodTracing();
-    }
-
+    // Create Service Connection
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -171,12 +175,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(batteryLowReceiver);
-    }
-
+    //Create Share Options Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.share_menu, menu);

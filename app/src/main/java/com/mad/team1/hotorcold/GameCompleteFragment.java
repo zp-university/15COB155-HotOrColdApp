@@ -48,12 +48,6 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
             home_Button.setVisibility(View.INVISIBLE);
         }
 
-//        View v = getView();
-//        SimpleLocation locationEnd = MainActivity.getGameManager().getPreviousGame().getObjective();
-//        String lat = String.valueOf(locationEnd.getLatitude());
-//        String longitude = String.valueOf(locationEnd.getLongitude());
-//        Snackbar.make(v, lat, Snackbar.LENGTH_INDEFINITE).show();
-
         Button map_Button = (Button) getView().findViewById(R.id.go_map_button);
         map_Button.setOnClickListener(this);
 
@@ -67,9 +61,9 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
 
 
 
+// Creates Intent using previous games final objective (lat and long)
    public void goToMap() {
 
-       //View v = getView();
         SimpleLocation locationEnd = MainActivity.getGameManager().getPreviousGame().getObjective();
         String latitude = String.valueOf(locationEnd.getLatitude());
         String longitude = String.valueOf(locationEnd.getLongitude());
@@ -83,6 +77,7 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    // Puts last games calculated score into our Custom View
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -94,7 +89,6 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
 
-
 // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -103,11 +97,8 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-
                     removeGameFromBackStack();
                     goHomeFragment();
-                    // handle back button's click listener
-                    //Toast.makeText(getActivity(), "Back press", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -130,7 +121,7 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
         transaction.commit();
     }
 
-    //Removes InGameScreen from Fragment
+    //Removes InGameScreen from BackStack - so user can not navigate back to in_game_screen after completing game
     public  void removeGameFromBackStack(){
         String gameFragment = new String("InGameFragment");
         FragmentManager fm = getFragmentManager();

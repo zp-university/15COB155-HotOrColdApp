@@ -42,7 +42,8 @@ public class LeaderboardsFragment extends Fragment{
         return view;
     }
 
-
+// Gets Data from ContentProvider
+// Uses Custom Loader to display retrieved information in listView
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);

@@ -23,21 +23,13 @@ import android.os.Bundle;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
-import android.text.Layout;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,6 +65,144 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         }
 
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        myView = inflater.inflate(R.layout.in_game_screen, container, false);
+
+        Button gamecomplete_Button = (Button) myView.findViewById(R.id.gamecomplete_button);
+        gamecomplete_Button.setOnClickListener(this);
+
+        MapFragment myMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.google_map_container, myMapFragment);
+        fragmentTransaction.commit();
+        myMapFragment.getMapAsync(this);
+
+        return myView;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // build notification
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("HotOrCold")
+                .setContentText("Game in Progress");
+
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // register receiver on receiving battery change intent and battery low
+        getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //Overwriting pressing back key
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    Snackbar.make(v, "Please end the game to get back to the menu", Snackbar.LENGTH_SHORT).show();
+                    // handle back button's click listener
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+
+        final FrameLayout mapContainer = (FrameLayout) myView.findViewById(R.id.google_map_container);
+        final FrameLayout clippingView = (FrameLayout) myView.findViewById(R.id.clipping_view);
+        final ViewTreeObserver vto = mapContainer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                final int mapWidth = mapContainer.getWidth();
+                final int mapHeight = mapContainer.getHeight();
+                int mapWidthHeight;
+                if (mapWidth < mapHeight) {
+                    mapWidthHeight = mapWidth;
+                } else {
+                    mapWidthHeight = mapHeight;
+                }
+                System.out.println("width:"+mapWidth);
+                System.out.println("height:"+mapHeight);
+                System.out.println("implemented:"+mapWidthHeight);
+                FrameLayout.LayoutParams mapLayoutParams = new FrameLayout.LayoutParams(mapWidthHeight, mapWidthHeight, 1);
+                mapContainer.setLayoutParams(mapLayoutParams);
+
+                final int clipperWidth = mapContainer.getWidth();
+                final int clipperHeight = mapContainer.getHeight();
+                if (clipperWidth < clipperHeight) {
+                    clipperWidthHeight = clipperWidth;
+                } else {
+                    clipperWidthHeight = clipperHeight;
+                }
+                System.out.println("width:"+clipperWidth);
+                System.out.println("height:"+clipperHeight);
+                System.out.println("implemented:" + clipperWidthHeight);
+
+                FrameLayout.LayoutParams clipperLayoutParams = new FrameLayout.LayoutParams(clipperWidthHeight, clipperWidthHeight, 1);
+                clippingView.setLayoutParams(clipperLayoutParams);
+
+                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, clipperWidthHeight, clipperWidthHeight);
+                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
+                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
+
+                mapContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Unregister mBatInfoReceiver
+        getActivity().unregisterReceiver(mBatInfoReceiver);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        gameMap.setOnMyLocationChangeListener(null);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        destroyInGameNotification();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(currentLocation != null){
+            outState.putDouble("currentLat", currentLocation.getLatitude());
+            outState.putDouble("currentLong", currentLocation.getLongitude());
+        }
+    }
+
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -170,119 +300,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     };
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        myView = inflater.inflate(R.layout.in_game_screen, container, false);
-
-        Button gamecomplete_Button = (Button) myView.findViewById(R.id.gamecomplete_button);
-        gamecomplete_Button.setOnClickListener(this);
-
-        MapFragment myMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.google_map_container, myMapFragment);
-        fragmentTransaction.commit();
-        myMapFragment.getMapAsync(this);
-
-        return myView;
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // register receiver on receiving battery change intent and battery low
-        getActivity().registerReceiver(mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        // Used to overwrite the back button press on this fragment, you cannot go back to game after it is complete
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    Snackbar.make(v, "Please end the game to get back to the menu", Snackbar.LENGTH_SHORT).show();
-                    // handle back button's click listener
-                    return true;
-                }
-                return false;
-            }
-
-        });
-
-
-        final FrameLayout mapContainer = (FrameLayout) myView.findViewById(R.id.google_map_container);
-        final FrameLayout clippingView = (FrameLayout) myView.findViewById(R.id.clipping_view);
-        final ViewTreeObserver vto = mapContainer.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                final int mapWidth = mapContainer.getWidth();
-                final int mapHeight = mapContainer.getHeight();
-                int mapWidthHeight;
-                if (mapWidth < mapHeight) {
-                    mapWidthHeight = mapWidth;
-                } else {
-                    mapWidthHeight = mapHeight;
-                }
-                System.out.println("width:"+mapWidth);
-                System.out.println("height:"+mapHeight);
-                System.out.println("implemented:"+mapWidthHeight);
-                FrameLayout.LayoutParams mapLayoutParams = new FrameLayout.LayoutParams(mapWidthHeight, mapWidthHeight, 1);
-                mapContainer.setLayoutParams(mapLayoutParams);
-
-                final int clipperWidth = mapContainer.getWidth();
-                final int clipperHeight = mapContainer.getHeight();
-                if (clipperWidth < clipperHeight) {
-                    clipperWidthHeight = clipperWidth;
-                } else {
-                    clipperWidthHeight = clipperHeight;
-                }
-                System.out.println("width:"+clipperWidth);
-                System.out.println("height:"+clipperHeight);
-                System.out.println("implemented:" + clipperWidthHeight);
-
-                FrameLayout.LayoutParams clipperLayoutParams = new FrameLayout.LayoutParams(clipperWidthHeight, clipperWidthHeight, 1);
-                clippingView.setLayoutParams(clipperLayoutParams);
-
-                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, clipperWidthHeight, clipperWidthHeight);
-                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
-                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
-
-                mapContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
-
-    }
-
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // build notification
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("HotOrCold")
-                .setContentText("Game in Progress");
-
-        // Sets an ID for the notification
-        int mNotificationId = 001;
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        gameMap.setOnMyLocationChangeListener(null);
-    }
-
     public void saveGameData(){
         Integer gameScore = MainActivity.getGameManager().getCurrentGame().calculateScore();
         String gameScoreString = gameScore.toString();
@@ -324,26 +341,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         notificationManager.cancel(001);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivity().unregisterReceiver(mBatInfoReceiver);
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        destroyInGameNotification();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if(currentLocation != null){
-            outState.putDouble("currentLat", currentLocation.getLatitude());
-            outState.putDouble("currentLong", currentLocation.getLongitude());
-        }
-    }
 
 }
 

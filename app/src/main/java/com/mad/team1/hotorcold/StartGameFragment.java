@@ -27,6 +27,15 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
     private boolean mDualPane;
     private String unitTypePreference;
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        // Check to see if we have a sideContent in which to embed a fragment directly
+        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
+        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -38,14 +47,6 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         unitTypePreference = pref.getString("pref_units", "");
 
         return myView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        // Check to see if we have a sideContent in which to embed a fragment directly
-        View sideContentFrame = getActivity().findViewById(R.id.sideContent);
-        mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -129,6 +130,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    //Displays seekBar progress in TextView
     public void showSeekbarDistance(int progress){
         progress = progress/2;
         int distance;
@@ -150,7 +152,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
         textView.setText("Distance: " + distance + " " + units);
     }
 
-
+//Used to save seekBar progress on Activity Recreation
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

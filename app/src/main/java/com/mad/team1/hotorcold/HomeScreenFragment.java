@@ -25,22 +25,18 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     boolean mDualPane;
     //private GestureDetectorCompat mDetector;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
-
-
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
 
     }
 
@@ -55,12 +51,11 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
         start_Button.setOnClickListener(this);
         leaderboard_Button.setOnClickListener(this);
 
-
-       // mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
-
+// Register GestureDetector
         final GestureDetector gesture = new GestureDetector(getActivity(),
                 new GestureDetector.SimpleOnGestureListener() {
 
+                    //Override onDown to return true so that we can then get register onDoubleTap
                     @Override
                     public boolean onDown(MotionEvent e) {
                         return true;
@@ -68,7 +63,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
-
                         //On Double Tap Start New Game with Random Location within 10KM
                         Fragment newFragment = StartGameFragment.goToGame(myView, "Metric", 10);
 
