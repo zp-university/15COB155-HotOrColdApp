@@ -44,23 +44,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
     }
 
-/*    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures";
-
-        @Override
-        public boolean onDown(MotionEvent event) {
-            Log.d(DEBUG_TAG,"onDown: " + event.toString());
-            return true;
-        }
-        @Override
-        public boolean onDoubleTap(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onDoubleTap: " + event.toString());
-            return true;
-        }
-        }*/
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -89,8 +72,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
                     public boolean onDoubleTap(MotionEvent e) {
 
                         //On Double Tap Start New Game with Random Location within 10KM
-                       // MainActivity.getGameManager().startNewGame(MainActivity.getLocation(currentocation), 10, DistanceUnit.KILOMETERS);
-
                         Fragment newFragment = StartGameFragment.goToGame(myView, "Metric", 10);
 
                         if (MainActivity.getLocation() != null) {
