@@ -74,7 +74,7 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
         String latitude = String.valueOf(locationEnd.getLatitude());
         String longitude = String.valueOf(locationEnd.getLongitude());
 
-       Uri finalLocation = Uri.parse("geo:" + latitude + "," + longitude + "(" + "Final Objective" + ")");
+       Uri finalLocation = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "(Final Objective)");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(finalLocation);
