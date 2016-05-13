@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         instance = this;
         setContentView(R.layout.activity_main);
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         if (savedInstanceState == null) {
             // The Activity is NOT being re-created so we can instantiate a new Fragment
             // and add it to the Activity
@@ -172,6 +170,12 @@ public class MainActivity extends AppCompatActivity {
         return locationService;
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(batteryLowReceiver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
