@@ -1,41 +1,38 @@
 package com.mad.team1.hotorcold;
 
 import android.Manifest;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.FragmentTransaction;
-import android.view.View;
 import android.widget.Toast;
 
-import com.mad.team1.hotorcold.api.Game;
 import com.mad.team1.hotorcold.api.GameManager;
 
 
-public class MainActivity extends AppCompatActivity implements LocationListener{
+public class MainActivity extends AppCompatActivity {
 
-    private LocationManager locationManager;
     private static final GameManager gameManager = GameManager.createGameManager();
     private static final int  READ_LOCATION_PERMISSIONS_REQUEST = 1;
-
+    private LocationService locationService;
+    private boolean locationServiceBound;
+    private static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_main);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -52,13 +49,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             // The Activity IS being re-created so we don't need to instantiate the Fragment or add it,
         }
 
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
 //Check permission to read location onResume so if user navigates away from app then back in still checks location permission
     protected void onResume(){
         super.onResume();
         getPermissionToReadLocation();
-        createLocationManager();
 
         registerReceiver(batteryLowReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
     }
@@ -112,14 +111,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         }
     }
 
-    private static Location currentLocation;
-
     public static Location getLocation(){
-        return currentLocation;
-    }
-    public void createLocationManager(){
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, this);
+        return instance.getLocationService().getCurrentLocation();
     }
 
     @Override
@@ -131,53 +124,40 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        //String msg = "New Latitude: " + location.getLatitude() + " New Longitude: " + location.getLongitude();
-        //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
-        currentLocation = location;
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    // If GPS is OFF send User to Location Settings Page
-
-        Snackbar snakbar = Snackbar.make(findViewById(R.id.myMainLayout), R.string.gps_off, Snackbar.LENGTH_INDEFINITE);
-        snakbar.setAction(R.string.goToLocationSettings, new goToSettingsListener());
-        snakbar.show();
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Snackbar.make(findViewById(R.id.myMainLayout), R.string.gps_on, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
     public static GameManager getGameManager() {
 
         return gameManager;
     }
 
-
-    public class goToSettingsListener implements View.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
+    public static MainActivity getInstance() {
+        return instance;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();  // Always call the superclass
 
+        instance = null;
         // Stop method tracing that the activity started during onCreate()
         android.os.Debug.stopMethodTracing();
     }
 
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            locationServiceBound = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationService.MyLocationBinder myBinder = (LocationService.MyLocationBinder) service;
+            locationService = myBinder.getService();
+            locationServiceBound = true;
+        }
+    };
+
+    public LocationService getLocationService() {
+        return locationService;
+    }
 }
