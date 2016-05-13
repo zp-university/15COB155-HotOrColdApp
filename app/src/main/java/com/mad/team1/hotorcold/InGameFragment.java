@@ -23,13 +23,16 @@ import android.os.Bundle;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.text.Layout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -39,23 +42,27 @@ import com.mad.team1.hotorcold.data.ScoreDataModel;
 
 import java.util.concurrent.TimeUnit;
 
-public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback{
+public class InGameFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback {
 
     private boolean mDualPane;
     private Drawable background;
     private Drawable mapClipper;
     private View myView;
     private GoogleMap gameMap;
-    private boolean mapLoading = false;
-    private Location currentLocation;
-    Integer gameScore;
-
+    private static  Location currentLocation;
+    private String colorHash = "#44b6ff";
+    private static boolean mapZoomed = false;
+    private boolean mapMoved = false;
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         // Check to see if we have a sideContent in which to embed a fragment directly
         View sideContentFrame = getActivity().findViewById(R.id.sideContent);
         mDualPane = sideContentFrame != null && sideContentFrame.getVisibility() == View.VISIBLE;
+        if( savedInstanceState != null ) {
+            currentLocation.setLatitude(savedInstanceState.getDouble("currentLat"));
+            currentLocation.setLongitude(savedInstanceState.getDouble("currentLong"));
+        }
 
     }
 
@@ -64,38 +71,37 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         gameMap = map;
         gameMap.setMyLocationEnabled(true);
         gameMap.getUiSettings().setScrollGesturesEnabled(false);
+        if (mapZoomed) {
+            gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+        }
         gameMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                gameMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                //mapZoomed = true;
+                if (!mapZoomed){
+                    gameMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                    mapZoomed = true;
+                }
                 gameMap.getUiSettings().setZoomGesturesEnabled(false);
+                mapMoved = true;
             }
         });
-
-
         gameMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
                 currentLocation = location;
-                String colorHash = MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(location);
+                colorHash = MainActivity.getGameManager().getCurrentGame().calculateDistanceColour(location);
                 Bitmap bgBitmap = createBgHeatBitmap(colorHash);
-                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, 600, 600);
+
                 background = new BitmapDrawable(getResources(), bgBitmap);
-                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
-
                 myView.findViewById(R.id.in_game_container).setBackground(background);
-                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
 
-                if (gameMap.getCameraPosition().zoom == 15F) {
-                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
-                } else if (!mapLoading) {
-                    gameMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 10));
-                    mapLoading = true;
+                if (mapMoved) {
+                    gameMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
                 }
 
                 TextView distanceTravelled = (TextView) getActivity().findViewById(R.id.distance_travelled);
                 distanceTravelled.setText("Distance Travelled: " + MainActivity.getGameManager().getCurrentGame().getTravelDistance() + "m");
-
                 Long time = (System.currentTimeMillis() - MainActivity.getGameManager().getCurrentGame().getStartTime());
 
                 String outputTime = String.format("%02d min, %02d sec",
@@ -103,7 +109,6 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                         TimeUnit.MILLISECONDS.toSeconds(time) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time))
                 );
-
                 TextView timePlayed = (TextView) getActivity().findViewById(R.id.time_played);
                 timePlayed.setText("Time Played: " + outputTime + "s");
             }
@@ -167,9 +172,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         fragmentTransaction.commit();
         myMapFragment.getMapAsync(this);
 
-
         return myView;
     }
+
+
 
     @Override
     public void onResume() {
@@ -191,12 +197,49 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 return false;
             }
 
-
         });
+
+
+        final FrameLayout mapContainer = (FrameLayout) myView.findViewById(R.id.google_map_container);
+        final FrameLayout clippingView = (FrameLayout) myView.findViewById(R.id.clipping_view);
+        ViewTreeObserver vto = mapContainer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                final int mapWidth = mapContainer.getWidth();
+                final int mapHeight = mapContainer.getHeight();
+                int mapWidthHeight;
+                if (mapWidth < mapHeight) {
+                    mapWidthHeight = mapWidth;
+                } else {
+                    mapWidthHeight = mapHeight;
+                }
+                FrameLayout.LayoutParams mapLayoutParams = new FrameLayout.LayoutParams(mapWidthHeight, mapWidthHeight);
+                mapContainer.setLayoutParams(mapLayoutParams);
+
+                final int clipperWidth = mapContainer.getWidth();
+                final int clipperHeight = mapContainer.getHeight();
+                int clipperWidthHeight;
+                if (clipperWidth < clipperHeight) {
+                    clipperWidthHeight = clipperWidth;
+                } else {
+                    clipperWidthHeight = clipperHeight;
+                }
+                FrameLayout.LayoutParams clipperLayoutParams = new FrameLayout.LayoutParams(clipperWidthHeight, clipperWidthHeight);
+                clippingView.setLayoutParams(clipperLayoutParams);
+
+                Bitmap clipperBitmap = createClipperHeatBitmap(colorHash, clipperWidthHeight, clipperWidthHeight);
+                mapClipper = new BitmapDrawable(getResources(), clipperBitmap);
+                myView.findViewById(R.id.clipping_view).setBackground(mapClipper);
+            }
+        });
+
     }
 
+
+
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         // build notification
@@ -236,6 +279,7 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
                 newFragment= new GameCompleteFragment();
                 saveGameData();
                 MainActivity.getGameManager().endCurrentGame(currentLocation);
+                mapZoomed = false;
                 destroyInGameNotification();
                 break;
         }
@@ -274,7 +318,10 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        if(currentLocation != null){
+            outState.putDouble("currentLat", currentLocation.getLatitude());
+            outState.putDouble("currentLong", currentLocation.getLongitude());
+        }
     }
 
 }
