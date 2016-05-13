@@ -86,12 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
             Snackbar snackbar = Snackbar.make(findViewById(R.id.myMainLayout), R.string.low_battery_message, Snackbar.LENGTH_INDEFINITE);
             snackbar.show();
-            //Get Battery %
-            // int level = i.getIntExtra("level", 0);
-            //Find textview control created in main.xml
-            //TextView tv = (TextView) getActivity().findViewById(R.id.battery_percentage);
-            //Set TextView with text
-            // tv.setText("Battery Level: " + Integer.toString(level) + "%");
+
         }
 
     };
@@ -177,16 +172,12 @@ public class MainActivity extends AppCompatActivity {
         return locationService;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.share_menu, menu);
-        // Get the menu item.
         MenuItem menuItem = menu.findItem(R.id.action_share);
-        // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-        // Set share Intent.
-        // Note: You can set the share Intent afterwords if you don't want to set it right now.
         mShareActionProvider.setShareIntent(createShareIntent());
         return true;
     }
@@ -200,8 +191,7 @@ public class MainActivity extends AppCompatActivity {
         return shareIntent;
     }
 
-    // Sets new share Intent.
-    // Use this method to change or set Share Intent in your Activity Lifecycle.
+    // Sets new share Intent
     private void changeShareIntent(Intent shareIntent) {
         mShareActionProvider.setShareIntent(shareIntent);
     }
