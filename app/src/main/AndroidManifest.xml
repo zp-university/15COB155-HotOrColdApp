@@ -6,9 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -19,15 +19,17 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/SplashTheme"
-            >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="geo" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -39,18 +41,22 @@
 
         <activity
             android:name=".SettingsFragment"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
 
         <provider
-            android:name="com.mad.team1.hotorcold.data.MyScoreProvider"
+            android:name=".data.MyScoreProvider"
             android:authorities="com.mad.team1.hotorcold"
             android:enabled="true"
-            android:exported="true" >
-        </provider>
+            android:exported="true"></provider>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCPldu8pmf5Tn3DuXrtsUhL5fANn7IWSFc"/>
+            android:value="AIzaSyCPldu8pmf5Tn3DuXrtsUhL5fANn7IWSFc" />
+
+        <service
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

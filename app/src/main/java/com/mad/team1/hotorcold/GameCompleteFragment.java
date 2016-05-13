@@ -3,13 +3,18 @@ package com.mad.team1.hotorcold;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.mad.team1.hotorcold.api.SimpleLocation;
 
 
 public class GameCompleteFragment extends Fragment implements View.OnClickListener{
@@ -43,6 +48,39 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
             home_Button.setVisibility(View.INVISIBLE);
         }
 
+//        View v = getView();
+//        SimpleLocation locationEnd = MainActivity.getGameManager().getPreviousGame().getObjective();
+//        String lat = String.valueOf(locationEnd.getLatitude());
+//        String longitude = String.valueOf(locationEnd.getLongitude());
+//        Snackbar.make(v, lat, Snackbar.LENGTH_INDEFINITE).show();
+
+        Button map_Button = (Button) getView().findViewById(R.id.go_map_button);
+        map_Button.setOnClickListener(this);
+
+        map_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMap();
+            }
+        });
+    }
+
+
+
+   public void goToMap() {
+
+       //View v = getView();
+        SimpleLocation locationEnd = MainActivity.getGameManager().getPreviousGame().getObjective();
+        String latitude = String.valueOf(locationEnd.getLatitude());
+        String longitude = String.valueOf(locationEnd.getLongitude());
+
+       Uri finalLocation = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "(Final Objective)");
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(finalLocation);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -69,7 +107,7 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
                     removeGameFromBackStack();
                     goHomeFragment();
                     // handle back button's click listener
-                    Toast.makeText(getActivity(), "Back press", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Back press", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -136,6 +174,7 @@ public class GameCompleteFragment extends Fragment implements View.OnClickListen
         // Commit the transaction
         transaction.commit();
     }
+
 
 
 }
