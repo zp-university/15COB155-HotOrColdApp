@@ -18,7 +18,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final GameManager gameManager = GameManager.createGameManager();
     private static final int  READ_LOCATION_PERMISSIONS_REQUEST = 1;
     private static Vibrator vibrator;
+    private ShareActionProvider mShareActionProvider;
 
     public static Vibrator getVibrator() {
         return vibrator;
@@ -171,4 +176,34 @@ public class MainActivity extends AppCompatActivity {
     public LocationService getLocationService() {
         return locationService;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+        // Get the menu item.
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        // Get the provider and hold onto it to set/change the share intent.
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        // Set share Intent.
+        // Note: You can set the share Intent afterwords if you don't want to set it right now.
+        mShareActionProvider.setShareIntent(createShareIntent());
+        return true;
+    }
+
+    // Create and return the Share Intent
+    private Intent createShareIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getResources().getText(R.string.recommend_message));
+
+        return shareIntent;
+    }
+
+    // Sets new share Intent.
+    // Use this method to change or set Share Intent in your Activity Lifecycle.
+    private void changeShareIntent(Intent shareIntent) {
+        mShareActionProvider.setShareIntent(shareIntent);
+    }
+
 }
