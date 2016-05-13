@@ -92,7 +92,7 @@ public class StartGameFragment extends Fragment implements View.OnClickListener{
                     distanceUnit = DistanceUnit.NAUTICAL_MILES;
                     break;
             }
-            MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), maxDistance, DistanceUnit.METERS);
+            MainActivity.getGameManager().startNewGame(MainActivity.getLocation(), maxDistance, distanceUnit);
         } else {
             // Vibrate for 500 milliseconds
             MainActivity.getVibrator().vibrate(500);

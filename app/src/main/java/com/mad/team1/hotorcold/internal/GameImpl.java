@@ -186,7 +186,7 @@ public class GameImpl implements Game {
         double currentDistance = calculateDistanceToObjective(simpleLocation, DistanceUnit.METERS);
 
         //Change this back to <= 50 when the app is made for real
-        if((originalDistance - currentDistance) <= 0) {
+        if((originalDistance - currentDistance) <= 50) {
 
             return 0;
         }
@@ -195,7 +195,7 @@ public class GameImpl implements Game {
          * Original: 0.1 * ((x - 50) + (0.02 * x)^2)
          * For Demo: 10  * ((x) + (0.02 * x)^2)
          */
-        int points = (int) (10 * ((currentDistance) + Math.pow((0.02 * currentDistance), 2)));
+        int points = (int) (0.1 * ((currentDistance - 50) + Math.pow((0.02 * currentDistance), 2)));
 
         double percentageDistance = calculatePercentageDistance(simpleLocation, originalDistance);
 
