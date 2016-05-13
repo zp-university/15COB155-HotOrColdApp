@@ -80,8 +80,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
                             // Commit the transaction
                             transaction.commit();
                         }
-
-                        //Snackbar.make(myView, "Double", Snackbar.LENGTH_SHORT).show();
                         return true;
                     }
                 });
@@ -92,8 +90,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
                 return gesture.onTouchEvent(event);
             }
         });
-
-
         return myView;
     }
 
