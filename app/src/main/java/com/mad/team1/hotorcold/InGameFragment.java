@@ -262,12 +262,16 @@ public class InGameFragment extends Fragment implements View.OnClickListener, On
         notificationManager.cancel(001);
     }
 
-
-
     @Override
     public void onDestroy(){
         super.onDestroy();
         destroyInGameNotification();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
 }
