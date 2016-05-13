@@ -185,10 +185,10 @@ public class GameImpl implements Game {
         double originalDistance = calculateDistanceToObjective(startPoint, DistanceUnit.METERS);
         double currentDistance = calculateDistanceToObjective(simpleLocation, DistanceUnit.METERS);
 
-        if((originalDistance - currentDistance) <= 50) {
+        /**if((originalDistance - currentDistance) <= 50) {
 
             return 0;
-        }
+        }*/
 
         /**
          * Original: 0.1 * ((x - 50) + (0.02 * x)^2)
