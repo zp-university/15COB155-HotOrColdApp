@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    tools:context="com.mad.team1.hotorcold.GameCompleteFragment"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/game_complete_title"
+        android:id="@+id/game_complete_title"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:padding="20dp" />
+    <com.mad.team1.hotorcold.KeyValueView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:id="@+id/score_view"
+        android:layout_gravity="center_horizontal"
+        custom:leftLabel=""
+        custom:leftLabelStyle="@style/MyTextViewStyleLeft"
+        custom:rightLabel=""
+        custom:rightLabelStyle="@style/MyTextViewStyleRight"
+        android:layout_above="@+id/leaderboards_button"
+        android:layout_below="@+id/game_complete_title" />
+
+
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/go_home"
+        android:id="@+id/go_home_button"
+        android:longClickable="false"
+        android:layout_above="@+id/go_map_button"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/go_map"
+        android:id="@+id/go_map_button"
+        android:longClickable="false"
+        android:layout_alignBottom="@+id/score_view"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leaderboards_text"
+        android:id="@+id/leaderboards_button"
+        android:longClickable="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
+
+
+
+</RelativeLayout>

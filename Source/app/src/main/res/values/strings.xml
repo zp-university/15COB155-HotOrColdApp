@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">Hot or Cold</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="welcome_message">Welcome to the "Hot Or Cold" App</string>
+    <string name="leaderboards_text">Leaderboards</string>
+    <string name="touch_gesture_instructions">Double tap the screen to start a random game</string>
+    <string name="title_activity_games_list">Game List</string>
+    <string name="share">Share Location</string>
+    <string name="recommend_message">I\'m playing HotOrCold, why don\'t you get it!! :)</string>
+
+    <string name="low_battery_message">Battery is Low, consider closing the app</string>
+    <string name="gps_off">Please switch on GPS</string>
+    <string name="gps_on">GPS is On - Thank You</string>
+    <string name="goToLocationSettings">Settings</string>
+
+    <string-array name="members">
+        <item>Zack</item>
+        <item>Matt</item>
+        <item>Oliver</item>
+        <item>Gurinder</item>
+    </string-array>
+    <string name="title_activity_preference">PreferenceActivity</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Start Game screen -->
+    <string name="start_game_title">Start Game</string>
+    <string name="start_game_text">Select a maximum distance for your game</string>
+
+    <!-- Strings related to Game Complete screen -->
+    <string name="game_complete_title">Game Complete</string>
+    <string name="go_home">Go Home</string>
+    <string name="go_map">Reveal Final Location</string>
+
+    <!-- Strings related to In Game screen -->
+    <string name="game_complete_button">End Game</string>
+
+    <!-- Strings related to Leaderboards screen -->
+    <string name="points">" Points"</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_units_title">Game List</string>
+    <string-array name="pref_units_entries">
+        <item>Metric</item>
+        <item>Imperial</item>
+        <item>Nautical</item>
+    </string-array>
+    <string name="pref_units_default">Metric</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+
+
+
+</resources>

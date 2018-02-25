@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/in_game_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/startBlue">
+
+        <FrameLayout
+            android:id="@+id/google_map_container"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"/>
+
+        <FrameLayout
+            android:id="@+id/clipping_view"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/distance_travelled"
+                android:text="distance_travelled"
+                android:padding="10dp"
+                android:paddingTop="40dp"
+                android:textColor="#fff"
+                android:gravity="center_vertical|center_horizontal" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/time_played"
+                android:text="time_played"
+                android:gravity="center_vertical|center_horizontal"
+                android:padding="10dp"
+                android:paddingTop="80dp"
+                android:textColor="#fff" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/battery_percentage"
+                android:text="battery_percentage"
+                android:gravity="center_vertical|center_horizontal"
+                android:padding="10dp"
+                android:paddingTop="120dp"
+                android:textColor="#fff"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/game_complete_button"
+                android:id="@+id/gamecomplete_button"
+                android:layout_marginBottom="20dp"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_gravity="center_horizontal|bottom" />
+        </LinearLayout>
+
+    </FrameLayout>
